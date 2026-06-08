@@ -1,4 +1,5 @@
 const Workspace = require('../models/Workspace');
+const Channel = require('../models/Channel');
 const Notification = require('../models/Notification');
 const logger = require('../services/loggerService');
 
@@ -20,9 +21,12 @@ const createWorkspace = async (req, res) => {
       .populate('members.user', 'name email')
       .populate('owner', 'name email');
 
+    const result = populated.toObject();
+    result.channels = [];
+
     logger.info(`Workspace created: ${name} by ${req.user.email}`);
 
-    res.status(201).json(populated);
+    res.status(201).json(result);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -36,7 +40,25 @@ const getMyWorkspaces = async (req, res) => {
       .populate('members.user', 'name email')
       .populate('owner', 'name email');
 
-    res.json(workspaces);
+    const workspaceIds = workspaces.map((w) => w._id);
+
+    const channelCounts = await Channel.aggregate([
+      { $match: { workspace: { $in: workspaceIds } } },
+      { $group: { _id: '$workspace', count: { $sum: 1 } } },
+    ]);
+
+    const countMap = {};
+    channelCounts.forEach((c) => { countMap[c._id.toString()] = c.count; });
+
+    const result = workspaces.map((ws) => {
+      const obj = ws.toObject();
+      obj.channels = [];
+      const count = countMap[ws._id.toString()] || 0;
+      for (let i = 0; i < count; i++) obj.channels.push({ _id: i });
+      return obj;
+    });
+
+    res.json(result);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
