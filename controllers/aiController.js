@@ -98,7 +98,7 @@ const summarizeWorkspace = async (req, res) => {
 
 const askAIQuestion = async (req, res) => {
   try {
-    const { question, channelId } = req.body;
+    const { question, channelId, workspaceId } = req.body;
 
     if (!question || !question.trim()) {
       return res.status(400).json({ message: 'Question is required' });
@@ -111,27 +111,47 @@ const askAIQuestion = async (req, res) => {
     const cached = await getCachedAIResult(cacheKey);
     if (cached) return res.json({ answer: cached.answer, cached: true });
 
-    let context = [];
-    if (channelId) {
-      const channel = await Channel.findById(channelId);
-      if (!channel) return res.status(404).json({ message: 'Channel not found' });
+    let context = { workspace: null, channels: [], messages: [] };
 
-      const workspace = await Workspace.findById(channel.workspace);
-      if (!workspace.getUserRole(req.user._id)) {
+    const targetWorkspaceId = workspaceId || (channelId ? (await Channel.findById(channelId))?.workspace : null);
+
+    if (targetWorkspaceId) {
+      const workspace = await Workspace.findById(targetWorkspaceId);
+      if (!workspace || !workspace.getUserRole(req.user._id)) {
         return res.status(403).json({ message: 'Not a workspace member' });
       }
 
-      context = await Message.find({
-        channel: channelId,
+      const channels = await Channel.find({ workspace: targetWorkspaceId }).select('name').lean();
+      const channelIds = channels.map((c) => c._id);
+
+      const recentMessages = await Message.find({
+        channel: { $in: channelIds },
         deleted: false,
+        text: { $ne: '' },
       })
         .sort({ createdAt: -1 })
-        .limit(100)
+        .limit(200)
         .populate('sender', 'name email')
         .lean();
+
+      const memberNames = workspace.members
+        .filter((m) => m.user)
+        .map((m) => m.user.name || 'Unknown');
+
+      context = {
+        workspace: {
+          name: workspace.name,
+          members: memberNames,
+          totalMembers: memberNames.length,
+          totalChannels: channels.length,
+          channelNames: channels.map((c) => c.name),
+        },
+        channels: channels.map((c) => c.name),
+        messages: recentMessages.reverse(),
+      };
     }
 
-    const answer = await askAI(question.trim(), context.reverse());
+    const answer = await askAI(question.trim(), context);
     await cacheAIResult(cacheKey, { answer }, 300);
 
     logger.info(`AI query: ${question.slice(0, 80)} by ${req.user.email}`);

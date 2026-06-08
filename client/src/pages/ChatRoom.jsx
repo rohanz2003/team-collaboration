@@ -1,5 +1,5 @@
 import { useEffect, useCallback, useRef, useState } from 'react'
-import { useCurrentChannel } from '../store/workspaceStore'
+import { useCurrentChannel, useCurrentWorkspace } from '../store/workspaceStore'
 import useAuthStore, { useAuth, useUpdateUser } from '../store/authStore'
 import useMessageStore, { useReplyToData } from '../store/messageStore'
 import useSubscriptionStore, { useIsPro, usePlan } from '../store/subscriptionStore'
@@ -35,6 +35,7 @@ import UpgradeProModal from '../components/UpgradeProModal'
 
 export default function ChatRoom() {
   const channel = useCurrentChannel()
+  const workspace = useCurrentWorkspace()
   const { user, token } = useAuth()
   const updateUser = useUpdateUser()
   const messages = useMessages()
@@ -684,6 +685,7 @@ export default function ChatRoom() {
           <AIPanel
             channelId={channel._id}
             messages={messages}
+            workspaceId={workspace?._id}
             onClose={() => setShowAIPanel(false)}
           />
         )}

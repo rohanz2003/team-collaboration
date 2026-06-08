@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { aiApi } from '../api/ai'
 import { useIsPro } from '../store/subscriptionStore'
 
-export default function AIPanel({ channelId, messages, onClose }) {
+export default function AIPanel({ channelId, messages, onClose, workspaceId }) {
   const [query, setQuery] = useState('')
   const [conversation, setConversation] = useState([])
   const [loading, setLoading] = useState(false)
@@ -23,7 +23,7 @@ export default function AIPanel({ channelId, messages, onClose }) {
     setLoading(true)
     setConversation((prev) => [...prev, { role: 'user', content: q }])
     try {
-      const { data } = await aiApi.askAI(q, channelId)
+      const { data } = await aiApi.askAI(q, channelId, workspaceId)
       setConversation((prev) => [
         ...prev,
         { role: 'assistant', content: data.answer },
@@ -44,7 +44,7 @@ export default function AIPanel({ channelId, messages, onClose }) {
     } finally {
       setLoading(false)
     }
-  }, [query, loading, channelId])
+  }, [query, loading, channelId, workspaceId])
 
   const handleSummarize = useCallback(async () => {
     if (!channelId || summaryLoading) return

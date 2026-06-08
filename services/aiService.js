@@ -87,19 +87,34 @@ async function summarizeMessages(messages) {
 
 async function askAI(question, context) {
   try {
-    const text = context
-      .map((m) => {
-        const sender = m.sender?.name || m.sender?.email || 'Unknown';
-        const content = m.text || (m.messageType === 'file' ? `[File: ${m.fileName}]` : '');
-        return `${sender}: ${content}`;
-      })
-      .join('\n');
+    let contextText = '';
+
+    if (context.workspace) {
+      const ws = context.workspace;
+      contextText += `WORKSPACE: "${ws.name}"\n`;
+      contextText += `MEMBERS (${ws.totalMembers}): ${ws.members.join(', ')}\n`;
+      contextText += `CHANNELS (${ws.totalChannels}): ${ws.channelNames.join(', ')}\n\n`;
+    }
+
+    if (context.messages && context.messages.length > 0) {
+      contextText += 'RECENT MESSAGES:\n';
+      contextText += context.messages
+        .map((m) => {
+          const sender = m.sender?.name || m.sender?.email || 'Unknown';
+          const time = new Date(m.createdAt).toLocaleString();
+          const content = m.text || (m.messageType === 'file' ? `[File: ${m.fileName}]` : '');
+          return `[${time}] ${sender}: ${content}`;
+        })
+        .join('\n');
+    } else {
+      contextText += '(No recent messages)';
+    }
 
     const response = await openai.chat.completions.create({
       model: MODEL,
       messages: [
         { role: 'system', content: SYSTEM_PROMPTS.ask },
-        { role: 'user', content: `Chat history:\n${text || '(empty)'}\n\nQuestion: ${question}` },
+        { role: 'user', content: `Workspace Context:\n${contextText}\n\nQuestion: ${question}` },
       ],
       temperature: 0.3,
       max_tokens: 800,
