@@ -24,8 +24,8 @@ async function checkAIQuota(req, res, next) {
 
 const summarizeChannel = async (req, res) => {
   try {
-    if (!process.env.OPENAI_API_KEY) {
-      return res.status(500).json({ message: 'AI is not configured — set OPENAI_API_KEY on the server.' });
+    if (!process.env.OPENAI_API_KEY && !process.env.OPENROUTER_API_KEY) {
+      return res.status(500).json({ message: 'AI is not configured — set OPENAI_API_KEY or OPENROUTER_API_KEY on the server.' });
     }
     const { channelId } = req.params;
 
@@ -103,8 +103,8 @@ const askAIQuestion = async (req, res) => {
     if (!question || !question.trim()) {
       return res.status(400).json({ message: 'Question is required' });
     }
-    if (!process.env.OPENAI_API_KEY) {
-      return res.status(500).json({ message: 'AI is not configured — set OPENAI_API_KEY on the server.' });
+    if (!process.env.OPENAI_API_KEY && !process.env.OPENROUTER_API_KEY) {
+      return res.status(500).json({ message: 'AI is not configured — set OPENAI_API_KEY or OPENROUTER_API_KEY on the server.' });
     }
 
     const cacheKey = `ai-ask:${channelId || 'global'}:${question.trim().toLowerCase().slice(0, 100)}`;

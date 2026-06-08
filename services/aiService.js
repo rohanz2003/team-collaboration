@@ -1,9 +1,14 @@
 const OpenAI = require('openai');
 const logger = require('./loggerService');
 
+const useOpenRouter = !!process.env.OPENROUTER_API_KEY;
+
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: useOpenRouter ? process.env.OPENROUTER_API_KEY : process.env.OPENAI_API_KEY,
+  baseURL: useOpenRouter ? 'https://openrouter.ai/api/v1' : undefined,
 });
+
+const MODEL = useOpenRouter ? 'openai/gpt-3.5-turbo' : 'gpt-3.5-turbo';
 
 const SYSTEM_PROMPTS = {
   summarize: `You are an AI assistant for a team collaboration platform. Summarize the following chat messages concisely.
@@ -48,7 +53,7 @@ async function summarizeMessages(messages) {
     }
 
     const response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+      model: MODEL,
       messages: [
         { role: 'system', content: SYSTEM_PROMPTS.summarize },
         { role: 'user', content: text },
@@ -91,7 +96,7 @@ async function askAI(question, context) {
       .join('\n');
 
     const response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+      model: MODEL,
       messages: [
         { role: 'system', content: SYSTEM_PROMPTS.ask },
         { role: 'user', content: `Chat history:\n${text || '(empty)'}\n\nQuestion: ${question}` },
@@ -122,7 +127,7 @@ async function generateActionItems(messages) {
     }
 
     const response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+      model: MODEL,
       messages: [
         { role: 'system', content: SYSTEM_PROMPTS.actionItems },
         { role: 'user', content: text },
@@ -145,6 +150,10 @@ async function generateActionItems(messages) {
 }
 
 async function generateEmbedding(text) {
+  if (useOpenRouter) {
+    logger.warn('Embeddings not supported with OpenRouter, skipping semantic search');
+    throw new Error('Embeddings require an OpenAI API key');
+  }
   try {
     const response = await openai.embeddings.create({
       model: 'text-embedding-ada-002',
