@@ -88,6 +88,50 @@ const useWorkspaceStore = create((set, get) => ({
     set({ currentUserRole: role })
   },
 
+  deleteChannel: async (channelId) => {
+    try {
+      await channelApi.delete(channelId)
+      set((state) => ({
+        channels: state.channels.filter((ch) => ch._id !== channelId),
+        currentChannel: state.currentChannel?._id === channelId ? null : state.currentChannel,
+      }))
+    } catch (err) {
+      throw err
+    }
+  },
+
+  deleteWorkspace: async (workspaceId) => {
+    try {
+      await workspaceApi.deleteWorkspace(workspaceId)
+      set((state) => ({
+        workspaces: state.workspaces.filter((ws) => ws._id !== workspaceId),
+        currentWorkspace: state.currentWorkspace?._id === workspaceId ? null : state.currentWorkspace,
+        channels: state.currentWorkspace?._id === workspaceId ? [] : state.channels,
+        currentChannel: state.currentWorkspace?._id === workspaceId ? null : state.currentChannel,
+        members: state.currentWorkspace?._id === workspaceId ? [] : state.members,
+        currentUserRole: state.currentWorkspace?._id === workspaceId ? null : state.currentUserRole,
+      }))
+    } catch (err) {
+      throw err
+    }
+  },
+
+  leaveWorkspace: async (workspaceId) => {
+    try {
+      await workspaceApi.leaveWorkspace(workspaceId)
+      set((state) => ({
+        workspaces: state.workspaces.filter((ws) => ws._id !== workspaceId),
+        currentWorkspace: state.currentWorkspace?._id === workspaceId ? null : state.currentWorkspace,
+        channels: state.currentWorkspace?._id === workspaceId ? [] : state.channels,
+        currentChannel: state.currentWorkspace?._id === workspaceId ? null : state.currentChannel,
+        members: state.currentWorkspace?._id === workspaceId ? [] : state.members,
+        currentUserRole: state.currentWorkspace?._id === workspaceId ? null : state.currentUserRole,
+      }))
+    } catch (err) {
+      throw err
+    }
+  },
+
   clearWorkspace: () => {
     set({
       workspaces: [],
@@ -115,5 +159,8 @@ export const useCreateChannel = () => useWorkspaceStore((s) => s.createChannel)
 export const useFetchWorkspaces = () => useWorkspaceStore((s) => s.fetchWorkspaces)
 export const useClearWorkspace = () => useWorkspaceStore((s) => s.clearWorkspace)
 export const useRefreshMembers = () => useWorkspaceStore((s) => s.refreshMembers)
+export const useDeleteChannel = () => useWorkspaceStore((s) => s.deleteChannel)
+export const useDeleteWorkspace = () => useWorkspaceStore((s) => s.deleteWorkspace)
+export const useLeaveWorkspace = () => useWorkspaceStore((s) => s.leaveWorkspace)
 
 export default useWorkspaceStore

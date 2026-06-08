@@ -7,6 +7,9 @@ import {
   useSetChannel,
   useCreateChannel,
   useCurrentUserRole,
+  useDeleteChannel,
+  useDeleteWorkspace,
+  useLeaveWorkspace,
 } from '../store/workspaceStore'
 import { useAuth, useLogout } from '../store/authStore'
 import { ROUTES } from '../constants/routes'
@@ -18,6 +21,12 @@ const btnBase = {
   display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
   padding: '6px 12px', borderRadius: 6, fontSize: 12, fontWeight: 600,
   cursor: 'pointer', transition: 'all 0.15s', border: 'none',
+}
+
+const navBtn = {
+  ...btnBase, width: '100%', justifyContent: 'flex-start', gap: 8,
+  backgroundColor: 'transparent', color: '#8b949e', fontSize: 12,
+  padding: '6px 10px', marginBottom: 4,
 }
 
 export default function WorkspaceSidebar() {
@@ -34,6 +43,11 @@ export default function WorkspaceSidebar() {
   const [showInput, setShowInput] = useState(false)
   const [channelName, setChannelName] = useState('')
   const [showInviteModal, setShowInviteModal] = useState(false)
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null)
+
+  const deleteChannel = useDeleteChannel()
+  const deleteWorkspace = useDeleteWorkspace()
+  const leaveWorkspace = useLeaveWorkspace()
 
   const isAdminOrOwner = userRole === 'owner' || userRole === 'admin'
 
@@ -132,10 +146,9 @@ export default function WorkspaceSidebar() {
         {channels.map((ch) => (
           <div
             key={ch._id}
-            onClick={() => setChannel(ch)}
             style={{
-              display: 'flex', alignItems: 'center', gap: 8,
-              padding: '7px 10px', borderRadius: 6,
+              display: 'flex', alignItems: 'center', gap: 4,
+              padding: '2px 2px 2px 10px', borderRadius: 6,
               cursor: 'pointer', marginBottom: 1,
               backgroundColor: currentChannel?._id === ch._id ? '#1c2128' : 'transparent',
               color: currentChannel?._id === ch._id ? '#e6edf3' : '#8b949e',
@@ -145,10 +158,44 @@ export default function WorkspaceSidebar() {
             onMouseEnter={(e) => { if (currentChannel?._id !== ch._id) e.currentTarget.style.backgroundColor = '#161b22' }}
             onMouseLeave={(e) => { if (currentChannel?._id !== ch._id) e.currentTarget.style.backgroundColor = 'transparent' }}
           >
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" style={{ flexShrink: 0 }}>
-              <path d="M2.5 7.5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5Zm0 3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5Zm0-6a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5Z"/>
-            </svg>
-            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ch.name}</span>
+            <div
+              onClick={() => setChannel(ch)}
+              style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1, minWidth: 0 }}
+            >
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" style={{ flexShrink: 0 }}>
+                <path d="M2.5 7.5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5Zm0 3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5Zm0-6a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5Z"/>
+              </svg>
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ch.name}</span>
+            </div>
+            {isAdminOrOwner && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  if (confirmDeleteId === ch._id) {
+                    deleteChannel(ch._id)
+                    setConfirmDeleteId(null)
+                  } else {
+                    setConfirmDeleteId(ch._id)
+                    setTimeout(() => setConfirmDeleteId(null), 3000)
+                  }
+                }}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                  border: 'none', background: 'transparent',
+                  color: confirmDeleteId === ch._id ? '#f85149' : '#8b949e',
+                  cursor: 'pointer', padding: '4px', borderRadius: 4,
+                  fontSize: 11, fontWeight: 600, flexShrink: 0,
+                  transition: 'color 0.1s',
+                }}
+                title={confirmDeleteId === ch._id ? 'Click again to confirm' : 'Delete channel'}
+              >
+                {confirmDeleteId === ch._id ? 'Confirm' : (
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M6.5 1.75a.25.25 0 0 1 .25-.25h2.5a.25.25 0 0 1 .25.25V3h-3V1.75Zm4.5 0V3h2.25a.75.75 0 0 1 0 1.5h-.5l-.721 9.673A1.75 1.75 0 0 1 10.282 16H5.718a1.75 1.75 0 0 1-1.747-1.827L3.25 4.5h-.5a.75.75 0 0 1 0-1.5H5V1.75A1.75 1.75 0 0 1 6.75 0h2.5A1.75 1.75 0 0 1 11 1.75Z"/>
+                  </svg>
+                )}
+              </button>
+            )}
           </div>
         ))}
       </div>
@@ -211,11 +258,7 @@ export default function WorkspaceSidebar() {
       <div style={{ padding: '8px 12px', borderTop: '1px solid #21262d' }}>
         <button
           onClick={() => navigate(ROUTES.WORKSPACES)}
-          style={{
-            ...btnBase, width: '100%', justifyContent: 'flex-start', gap: 8,
-            backgroundColor: 'transparent', color: '#8b949e', fontSize: 12,
-            padding: '6px 10px', marginBottom: 4,
-          }}
+          style={navBtn}
           onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#161b22' }}
           onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}
         >
@@ -224,13 +267,45 @@ export default function WorkspaceSidebar() {
           </svg>
           Workspaces
         </button>
+        {userRole === 'owner' && (
+          <button
+            onClick={async () => {
+              if (window.confirm(`Delete "${workspace?.name}" permanently? This action cannot be undone.`)) {
+                await deleteWorkspace(workspace._id)
+                navigate(ROUTES.WORKSPACES)
+              }
+            }}
+            style={{ ...navBtn, color: '#f85149' }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(248,81,73,0.1)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}
+          >
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M6.5 1.75a.25.25 0 0 1 .25-.25h2.5a.25.25 0 0 1 .25.25V3h-3V1.75Zm4.5 0V3h2.25a.75.75 0 0 1 0 1.5h-.5l-.721 9.673A1.75 1.75 0 0 1 10.282 16H5.718a1.75 1.75 0 0 1-1.747-1.827L3.25 4.5h-.5a.75.75 0 0 1 0-1.5H5V1.75A1.75 1.75 0 0 1 6.75 0h2.5A1.75 1.75 0 0 1 11 1.75ZM5.75 6.5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5a.75.75 0 0 1 .75-.75Zm4.5 0a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5a.75.75 0 0 1 .75-.75Z"/>
+            </svg>
+            Delete workspace
+          </button>
+        )}
+        {userRole && userRole !== 'owner' && (
+          <button
+            onClick={async () => {
+              if (window.confirm(`Leave "${workspace?.name}"? You can rejoin if invited again.`)) {
+                await leaveWorkspace(workspace._id)
+                navigate(ROUTES.WORKSPACES)
+              }
+            }}
+            style={{ ...navBtn, color: '#f85149' }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(248,81,73,0.1)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}
+          >
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M2 2.75C2 1.784 2.784 1 3.75 1h2.5a.75.75 0 0 1 0 1.5h-2.5a.25.25 0 0 0-.25.25v10.5c0 .138.112.25.25.25h2.5a.75.75 0 0 1 0 1.5h-2.5A1.75 1.75 0 0 1 2 13.25Zm10.44 4.5-1.97-1.97a.75.75 0 0 1 1.06-1.06l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 0 1-1.06-1.06l1.97-1.97H6.75a.75.75 0 0 1 0-1.5h5.69Z"/>
+            </svg>
+            Leave workspace
+          </button>
+        )}
         <button
           onClick={handleLogout}
-          style={{
-            ...btnBase, width: '100%', justifyContent: 'flex-start', gap: 8,
-            backgroundColor: 'transparent', color: '#8b949e', fontSize: 12,
-            padding: '6px 10px',
-          }}
+          style={navBtn}
           onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#161b22' }}
           onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}
         >

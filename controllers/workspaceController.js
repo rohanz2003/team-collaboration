@@ -200,6 +200,37 @@ const removeMember = async (req, res) => {
   }
 };
 
+const leaveWorkspace = async (req, res) => {
+  try {
+    const { workspaceId } = req.params;
+
+    const workspace = await Workspace.findById(workspaceId);
+    if (!workspace) {
+      return res.status(404).json({ message: 'Workspace not found' });
+    }
+
+    if (workspace.owner.toString() === req.user._id.toString()) {
+      return res.status(400).json({ message: 'Owner cannot leave the workspace. Delete it instead.' });
+    }
+
+    const memberIndex = workspace.members.findIndex(
+      (m) => m.user.toString() === req.user._id.toString()
+    );
+    if (memberIndex === -1) {
+      return res.status(404).json({ message: 'You are not a member of this workspace' });
+    }
+
+    workspace.members.splice(memberIndex, 1);
+    await workspace.save();
+
+    logger.info(`User left workspace: ${req.user.email} left ${workspace.name}`);
+
+    res.json({ message: 'Left workspace', workspaceId });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const deleteWorkspace = async (req, res) => {
   try {
     const workspace = await Workspace.findById(req.params.workspaceId);
@@ -227,5 +258,6 @@ module.exports = {
   getWorkspaceMembers,
   updateMemberRole,
   removeMember,
+  leaveWorkspace,
   deleteWorkspace,
 };

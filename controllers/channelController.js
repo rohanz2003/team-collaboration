@@ -1,5 +1,6 @@
 const Channel = require('../models/Channel');
 const Workspace = require('../models/Workspace');
+const logger = require('../services/loggerService');
 
 const createChannel = async (req, res) => {
   try {
@@ -62,4 +63,33 @@ const getWorkspaceChannels = async (req, res) => {
   }
 };
 
-module.exports = { createChannel, getWorkspaceChannels };
+const deleteChannel = async (req, res) => {
+  try {
+    const { channelId } = req.params;
+
+    const channel = await Channel.findById(channelId);
+    if (!channel) {
+      return res.status(404).json({ message: 'Channel not found' });
+    }
+
+    const workspace = await Workspace.findById(channel.workspace);
+    if (!workspace) {
+      return res.status(404).json({ message: 'Workspace not found' });
+    }
+
+    const userRole = workspace.getUserRole(req.user._id);
+    if (userRole !== 'owner' && userRole !== 'admin') {
+      return res.status(403).json({ message: 'Only owner or admin can delete channels' });
+    }
+
+    await Channel.findByIdAndDelete(channelId);
+
+    logger.info(`Channel deleted: ${channel.name} from workspace ${workspace.name} by ${req.user.email}`);
+
+    res.json({ message: 'Channel deleted', channelId });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { createChannel, getWorkspaceChannels, deleteChannel };

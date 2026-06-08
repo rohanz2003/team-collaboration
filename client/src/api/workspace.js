@@ -8,5 +8,6 @@ export const workspaceApi = {
     api.put(`/workspace/${workspaceId}/role`, { userId, role }),
   removeMember: (workspaceId, userId) =>
     api.delete(`/workspace/${workspaceId}/members/${userId}`),
+  leaveWorkspace: (workspaceId) => api.delete(`/workspace/${workspaceId}/leave`),
   deleteWorkspace: (workspaceId) => api.delete(`/workspace/${workspaceId}`),
 }

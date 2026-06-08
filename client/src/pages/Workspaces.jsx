@@ -6,7 +6,12 @@ import RoleBadge from '../components/RoleBadge'
 import NotificationBell from '../components/NotificationBell'
 import { ROUTES } from '../constants/routes'
 
-const COLORS = ['#0969da', '#1f883d', '#9a6700', '#cf222e', '#8250df', '#0550ae']
+const WHATSAPP_GREEN = '#25D366'
+const WHATSAPP_GREEN_DARK = '#20BD5A'
+const WHATSAPP_BG = '#efeae2'
+const WHATSAPP_TEAL = '#075E54'
+
+const COLORS = ['#25D366', '#075E54', '#128C7E', '#34B7F1', '#DCF8C6', '#ECE5DD']
 
 function WorkspaceCard({ ws, onSelect }) {
   const memberCount = ws.members?.length || 0
@@ -19,7 +24,7 @@ function WorkspaceCard({ ws, onSelect }) {
       onClick={() => onSelect(ws)}
       style={{
         backgroundColor: '#fff',
-        borderRadius: 10,
+        borderRadius: 12,
         border: '1px solid #e1e4e8',
         cursor: 'pointer',
         transition: 'border-color 0.2s, box-shadow 0.2s, transform 0.2s',
@@ -27,8 +32,8 @@ function WorkspaceCard({ ws, onSelect }) {
         overflow: 'hidden',
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = '#0969da'
-        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(9,105,218,0.12), 0 4px 12px rgba(0,0,0,0.08)'
+        e.currentTarget.style.borderColor = WHATSAPP_GREEN
+        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(37,211,102,0.15), 0 4px 12px rgba(0,0,0,0.08)'
         e.currentTarget.style.transform = 'translateY(-2px)'
       }}
       onMouseLeave={(e) => {
@@ -37,17 +42,17 @@ function WorkspaceCard({ ws, onSelect }) {
         e.currentTarget.style.transform = 'translateY(0)'
       }}
     >
-      <div style={{ padding: '20px 20px 16px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 14 }}>
+      <div style={{ padding: '20px 20px 14px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
           <div style={{
-            width: 42,
-            height: 42,
-            borderRadius: 10,
-            background: `linear-gradient(135deg, ${COLORS[Math.abs(hash(ws._id)) % COLORS.length]}, ${COLORS[Math.abs(hash(ws._id) + 2) % COLORS.length]})`,
+            width: 44,
+            height: 44,
+            borderRadius: 12,
+            background: `linear-gradient(135deg, ${COLORS[Math.abs(hash(ws._id)) % COLORS.length]}, ${COLORS[(Math.abs(hash(ws._id)) + 2) % COLORS.length]})`,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: 15,
+            fontSize: 16,
             fontWeight: 700,
             color: '#fff',
             letterSpacing: 0.3,
@@ -57,26 +62,43 @@ function WorkspaceCard({ ws, onSelect }) {
         </div>
 
         <div style={{ marginBottom: 10 }}>
-          <div style={{ fontSize: 15, fontWeight: 600, color: '#0d1117', marginBottom: 2 }}>{ws.name}</div>
+          <div style={{ fontSize: 15, fontWeight: 600, color: '#075E54', marginBottom: 2 }}>{ws.name}</div>
           <div style={{ fontSize: 12, color: '#656d76', display: 'flex', alignItems: 'center', gap: 4 }}>
             <span>{ownerName}</span>
             <span style={{ color: '#d0d7de' }}>·</span>
-            <span style={{ color: chCount > 0 ? '#0969da' : '#656d76' }}>{chCount} {chCount === 1 ? 'channel' : 'channels'}</span>
+            <span style={{ color: chCount > 0 ? WHATSAPP_GREEN : '#656d76' }}>{chCount} {chCount === 1 ? 'channel' : 'channels'}</span>
           </div>
         </div>
 
         <div style={{
           display: 'flex',
           gap: 12,
-          paddingTop: 12,
-          borderTop: '1px solid #f6f8fa',
+          paddingTop: 10,
+          borderTop: '1px solid #f0f0f0',
           fontSize: 12,
           color: '#656d76',
+          flexWrap: 'wrap',
         }}>
           <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M5.5 3.5a2 2 0 1 1 0 4 2 2 0 0 1 0-4ZM5.5 9c-2.7 0-5 1.3-5 3v1h10v-1c0-1.7-2.3-3-5-3Zm6-5.5a2 2 0 1 1 0 4 2 2 0 0 1 0-4ZM16 12c0-1.7-2.3-3-5-3-.6 0-1.2.1-1.8.3.5.6.8 1.4.8 2.3v1h6v-.6Z"/></svg>
-            {memberCount}
+            <svg width="14" height="14" viewBox="0 0 16 16" fill={WHATSAPP_GREEN}><path d="M5.5 3.5a2 2 0 1 1 0 4 2 2 0 0 1 0-4ZM5.5 9c-2.7 0-5 1.3-5 3v1h10v-1c0-1.7-2.3-3-5-3Zm6-5.5a2 2 0 1 1 0 4 2 2 0 0 1 0-4ZM16 12c0-1.7-2.3-3-5-3-.6 0-1.2.1-1.8.3.5.6.8 1.4.8 2.3v1h6v-.6Z"/></svg>
+            {memberCount} members
           </span>
+          {ws.members?.slice(0, 4).map((m) => (
+            <span key={m.user?._id || m.user} style={{
+              display: 'inline-flex', alignItems: 'center', gap: 3,
+              padding: '1px 6px', borderRadius: 4,
+              backgroundColor: '#dcf8c6', color: '#075E54',
+              fontSize: 11,
+            }}>
+              <svg width="10" height="10" viewBox="0 0 16 16" fill="#075E54">
+                <path d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm0 7A3.5 3.5 0 0 0 4.5 12v.5c0 .28.22.5.5.5h6c.28 0 .5-.22.5-.5V12A3.5 3.5 0 0 0 8 8Z"/>
+              </svg>
+              {m.user?.name || 'Unknown'}
+            </span>
+          ))}
+          {ws.members?.length > 4 && (
+            <span style={{ color: '#8b949e', fontSize: 11 }}>+{ws.members.length - 4}</span>
+          )}
         </div>
       </div>
     </div>
@@ -118,7 +140,7 @@ export default function Workspaces() {
   }, [name, createWorkspace, handleSelect])
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#f6f8fa' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: WHATSAPP_BG }}>
       <Header
         user={user}
         title="Workspaces"
@@ -131,7 +153,7 @@ export default function Workspaces() {
             <h1 style={{
               fontSize: 22,
               fontWeight: 600,
-              color: '#0d1117',
+              color: WHATSAPP_TEAL,
               margin: '0 0 2px',
               letterSpacing: '-0.3px',
             }}>
@@ -148,15 +170,17 @@ export default function Workspaces() {
               alignItems: 'center',
               gap: 6,
               padding: '8px 18px',
-              borderRadius: 6,
+              borderRadius: 8,
               border: showCreate ? '1px solid #d0d7de' : 'none',
-              backgroundColor: showCreate ? '#fff' : '#0969da',
+              backgroundColor: showCreate ? '#fff' : WHATSAPP_GREEN,
               color: showCreate ? '#24292f' : '#fff',
               fontSize: 13,
               fontWeight: 600,
               cursor: 'pointer',
               transition: 'background-color 0.15s, border-color 0.15s',
             }}
+            onMouseEnter={(e) => { if (!showCreate) e.currentTarget.style.backgroundColor = WHATSAPP_GREEN_DARK }}
+            onMouseLeave={(e) => { if (!showCreate) e.currentTarget.style.backgroundColor = WHATSAPP_GREEN }}
           >
             <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" style={{ transform: showCreate ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s' }}>
               <path d="M8 2a.75.75 0 0 1 .75.75v4.5h4.5a.75.75 0 0 1 0 1.5h-4.5v4.5a.75.75 0 0 1-1.5 0v-4.5h-4.5a.75.75 0 0 1 0-1.5h4.5v-4.5A.75.75 0 0 1 8 2Z"/>
@@ -170,7 +194,7 @@ export default function Workspaces() {
             padding: '16px 20px',
             backgroundColor: '#fff',
             border: '1px solid #d0d7de',
-            borderRadius: 10,
+            borderRadius: 12,
             marginBottom: 20,
             boxShadow: '0 4px 12px rgba(0,0,0,0.06)',
           }}>
@@ -179,12 +203,12 @@ export default function Workspaces() {
                 width: 36,
                 height: 36,
                 borderRadius: 8,
-                backgroundColor: '#f6f8fa',
+                backgroundColor: '#dcf8c6',
                 border: '1px solid #d0d7de',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#656d76',
+                color: WHATSAPP_TEAL,
                 flexShrink: 0,
               }}>
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
@@ -213,13 +237,15 @@ export default function Workspaces() {
                   padding: '8px 18px',
                   borderRadius: 6,
                   border: 'none',
-                  backgroundColor: name.trim() ? '#0969da' : '#d0d7de',
+                  backgroundColor: name.trim() ? WHATSAPP_GREEN : '#d0d7de',
                   color: '#fff',
                   fontSize: 13,
                   fontWeight: 600,
                   cursor: name.trim() ? 'pointer' : 'not-allowed',
                   transition: 'background-color 0.15s',
                 }}
+                onMouseEnter={(e) => { if (name.trim()) e.currentTarget.style.backgroundColor = WHATSAPP_GREEN_DARK }}
+                onMouseLeave={(e) => { if (name.trim()) e.currentTarget.style.backgroundColor = WHATSAPP_GREEN }}
               >
                 Create
               </button>
@@ -244,8 +270,7 @@ export default function Workspaces() {
 function Header({ user, onDashboard }) {
   return (
     <div style={{
-      backgroundColor: '#fff',
-      borderBottom: '1px solid #d0d7de',
+      backgroundColor: WHATSAPP_TEAL,
       padding: '0 24px',
       position: 'sticky',
       top: 0,
@@ -265,7 +290,7 @@ function Header({ user, onDashboard }) {
               width: 28,
               height: 28,
               borderRadius: 6,
-              backgroundColor: '#0d1117',
+              backgroundColor: 'rgba(255,255,255,0.2)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -277,10 +302,10 @@ function Header({ user, onDashboard }) {
                 <path d="M2 1.75C2 .784 2.784 0 3.75 0h2.5C7.216 0 8 .784 8 1.75v2.5A1.75 1.75 0 0 1 6.25 6h-2.5A1.75 1.75 0 0 1 2 4.25Zm8 0C10 .784 10.784 0 11.75 0h2.5C15.216 0 16 .784 16 1.75v2.5A1.75 1.75 0 0 1 14.25 6h-2.5A1.75 1.75 0 0 1 10 4.25ZM2 9.75c0-.966.784-1.75 1.75-1.75h2.5c.966 0 1.75.784 1.75 1.75v2.5A1.75 1.75 0 0 1 6.25 14h-2.5A1.75 1.75 0 0 1 2 12.25Zm8 0c0-.966.784-1.75 1.75-1.75h2.5c.966 0 1.75.784 1.75 1.75v2.5A1.75 1.75 0 0 1 14.25 14h-2.5A1.75 1.75 0 0 1 10 12.25Z"/>
               </svg>
             </div>
-            <span style={{ fontSize: 15, fontWeight: 600, color: '#0d1117' }}>TeamCollab</span>
+            <span style={{ fontSize: 15, fontWeight: 600, color: '#fff' }}>TeamCollab</span>
           </div>
-          <div style={{ width: 1, height: 20, backgroundColor: '#d0d7de' }} />
-          <span style={{ fontSize: 13, color: '#656d76' }}>Workspaces</span>
+          <div style={{ width: 1, height: 20, backgroundColor: 'rgba(255,255,255,0.25)' }} />
+          <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.85)' }}>Workspaces</span>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -291,7 +316,7 @@ function Header({ user, onDashboard }) {
               width: 28,
               height: 28,
               borderRadius: '50%',
-              backgroundColor: '#0969da',
+              backgroundColor: WHATSAPP_GREEN,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -317,24 +342,24 @@ function EmptyState({ onCreate }) {
       textAlign: 'center',
       backgroundColor: '#fff',
       border: '1px solid #d0d7de',
-      borderRadius: 10,
+      borderRadius: 12,
     }}>
       <div style={{
         width: 72,
         height: 72,
         borderRadius: '50%',
-        backgroundColor: '#f6f8fa',
+        backgroundColor: '#dcf8c6',
         border: '1px solid #d0d7de',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         margin: '0 auto 20px',
       }}>
-        <svg width="32" height="32" viewBox="0 0 16 16" fill="#656d76">
+        <svg width="32" height="32" viewBox="0 0 16 16" fill={WHATSAPP_TEAL}>
           <path d="M2 1.75C2 .784 2.784 0 3.75 0h2.5C7.216 0 8 .784 8 1.75v2.5A1.75 1.75 0 0 1 6.25 6h-2.5A1.75 1.75 0 0 1 2 4.25Zm8 0C10 .784 10.784 0 11.75 0h2.5C15.216 0 16 .784 16 1.75v2.5A1.75 1.75 0 0 1 14.25 6h-2.5A1.75 1.75 0 0 1 10 4.25ZM2 9.75c0-.966.784-1.75 1.75-1.75h2.5c.966 0 1.75.784 1.75 1.75v2.5A1.75 1.75 0 0 1 6.25 14h-2.5A1.75 1.75 0 0 1 2 12.25Zm8 0c0-.966.784-1.75 1.75-1.75h2.5c.966 0 1.75.784 1.75 1.75v2.5A1.75 1.75 0 0 1 14.25 14h-2.5A1.75 1.75 0 0 1 10 12.25Z"/>
         </svg>
       </div>
-      <h2 style={{ fontSize: 18, fontWeight: 600, color: '#0d1117', margin: '0 0 6px' }}>No workspaces yet</h2>
+      <h2 style={{ fontSize: 18, fontWeight: 600, color: WHATSAPP_TEAL, margin: '0 0 6px' }}>No workspaces yet</h2>
       <p style={{ color: '#656d76', fontSize: 14, margin: '0 auto 24px', maxWidth: 380, lineHeight: 1.5 }}>
         Workspaces are where your team comes together. Create your first workspace to start collaborating in real-time.
       </p>
@@ -342,17 +367,17 @@ function EmptyState({ onCreate }) {
         onClick={onCreate}
         style={{
           padding: '10px 24px',
-          borderRadius: 6,
+          borderRadius: 8,
           border: 'none',
-          backgroundColor: '#0969da',
+          backgroundColor: WHATSAPP_GREEN,
           color: '#fff',
           fontSize: 14,
           fontWeight: 600,
           cursor: 'pointer',
           transition: 'background-color 0.15s',
         }}
-        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#0550ae' }}
-        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#0969da' }}
+        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = WHATSAPP_GREEN_DARK }}
+        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = WHATSAPP_GREEN }}
       >
         Create workspace
       </button>
