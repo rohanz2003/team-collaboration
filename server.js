@@ -61,13 +61,24 @@ app.use('/api/payment', paymentRoutes);
 
 if (process.env.NODE_ENV === 'production') {
   const clientBuild = path.join(__dirname, 'client', 'dist');
-  app.use(express.static(clientBuild));
-  app.get('*', (req, res) => {
-    if (req.path.startsWith('/api')) {
-      return notFound(req, res, () => {});
-    }
-    res.sendFile(path.join(clientBuild, 'index.html'));
-  });
+  const fs = require('fs');
+  if (fs.existsSync(clientBuild)) {
+    app.use(express.static(clientBuild));
+    app.get('*', (req, res) => {
+      if (req.path.startsWith('/api')) {
+        return notFound(req, res, () => {});
+      }
+      res.sendFile(path.join(clientBuild, 'index.html'));
+    });
+  } else {
+    logger.warn('client/dist not found — serving API only');
+    app.get('*', (req, res) => {
+      if (req.path.startsWith('/api')) {
+        return notFound(req, res, () => {});
+      }
+      res.redirect(process.env.FRONTEND_URL || 'https://team-collaboration.vercel.app');
+    });
+  }
 }
 
 app.get('/', (req, res) => {
