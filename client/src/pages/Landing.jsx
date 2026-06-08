@@ -1,41 +1,55 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { ROUTES } from '../constants/routes'
 
+const C = {
+  teal: '#075E54',
+  tealDark: '#054d44',
+  green: '#25D366',
+  greenDark: '#20BD5A',
+  cream: '#efeae2',
+  white: '#ffffff',
+  text: '#111b21',
+  textSecondary: '#667781',
+  border: '#e9edef',
+  bgLight: '#f0f2f5',
+  iconGray: '#8696a0',
+}
+
 const styles = {
   container: {
     minHeight: '100vh',
     display: 'flex',
     flexDirection: 'column',
     fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+    backgroundColor: C.cream,
   },
   header: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '16px 48px',
-    borderBottom: '1px solid #e9edf2',
-    backgroundColor: '#fff',
+    backgroundColor: C.teal,
   },
   logo: {
     fontSize: 22,
     fontWeight: 800,
-    color: '#1a1a2e',
+    color: C.white,
     letterSpacing: '-0.5px',
     display: 'flex',
     alignItems: 'center',
-    gap: 8,
+    gap: 10,
   },
   logoIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
-    background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+    width: 34,
+    height: 34,
+    borderRadius: '50%',
+    backgroundColor: C.white,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: '#fff',
+    color: C.teal,
     fontSize: 16,
-    fontWeight: 700,
+    fontWeight: 800,
   },
   nav: {
     display: 'flex',
@@ -45,7 +59,7 @@ const styles = {
   navLink: {
     fontSize: 14,
     fontWeight: 500,
-    color: '#475569',
+    color: 'rgba(255,255,255,0.85)',
     cursor: 'pointer',
     textDecoration: 'none',
     transition: 'color 0.15s',
@@ -58,9 +72,9 @@ const styles = {
   btnOutline: {
     padding: '8px 20px',
     borderRadius: 8,
-    border: '1.5px solid #e2e8f0',
-    backgroundColor: '#fff',
-    color: '#475569',
+    border: '1.5px solid rgba(255,255,255,0.3)',
+    backgroundColor: 'transparent',
+    color: C.white,
     fontSize: 14,
     fontWeight: 600,
     cursor: 'pointer',
@@ -71,13 +85,13 @@ const styles = {
     padding: '8px 20px',
     borderRadius: 8,
     border: 'none',
-    background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-    color: '#fff',
+    backgroundColor: C.green,
+    color: C.white,
     fontSize: 14,
     fontWeight: 600,
     cursor: 'pointer',
     textDecoration: 'none',
-    transition: 'opacity 0.15s',
+    transition: 'background-color 0.15s',
   },
   hero: {
     flex: 1,
@@ -86,7 +100,6 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     padding: '80px 24px',
-    background: 'linear-gradient(135deg, #f8fafc 0%, #eef2ff 50%, #f0f0ff 100%)',
     textAlign: 'center',
   },
   heroBadge: {
@@ -95,29 +108,28 @@ const styles = {
     gap: 6,
     padding: '6px 16px',
     borderRadius: 20,
-    backgroundColor: '#eef2ff',
-    color: '#6366f1',
+    backgroundColor: C.white,
+    color: C.teal,
     fontSize: 13,
     fontWeight: 600,
     marginBottom: 24,
+    border: '1px solid ' + C.border,
   },
   heroTitle: {
     fontSize: 56,
     fontWeight: 800,
-    color: '#1a1a2e',
+    color: C.text,
     margin: '0 0 20px',
     lineHeight: 1.1,
     letterSpacing: '-1.5px',
     maxWidth: 720,
   },
   heroGradient: {
-    background: 'linear-gradient(135deg, #6366f1, #a855f7, #ec4899)',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
+    color: C.teal,
   },
   heroSub: {
     fontSize: 18,
-    color: '#64748b',
+    color: C.textSecondary,
     lineHeight: 1.6,
     margin: '0 0 40px',
     maxWidth: 540,
@@ -137,14 +149,14 @@ const styles = {
     transition: 'all 0.15s',
   },
   btnLargePrimary: {
-    background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-    color: '#fff',
-    boxShadow: '0 4px 16px rgba(99, 102, 241, 0.35)',
+    backgroundColor: C.green,
+    color: C.white,
+    boxShadow: '0 4px 16px rgba(37, 211, 102, 0.35)',
   },
   btnLargeOutline: {
-    backgroundColor: '#fff',
-    color: '#475569',
-    border: '1.5px solid #e2e8f0',
+    backgroundColor: C.white,
+    color: C.text,
+    border: '1.5px solid ' + C.border,
   },
   features: {
     display: 'grid',
@@ -157,14 +169,14 @@ const styles = {
   featureCard: {
     padding: 32,
     borderRadius: 16,
-    backgroundColor: '#fff',
-    border: '1px solid #e9edf2',
+    backgroundColor: C.white,
+    border: '1px solid ' + C.border,
     transition: 'transform 0.2s, box-shadow 0.2s',
   },
   featureIcon: {
     width: 48,
     height: 48,
-    borderRadius: 12,
+    borderRadius: '50%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -174,31 +186,31 @@ const styles = {
   featureTitle: {
     fontSize: 18,
     fontWeight: 700,
-    color: '#1a1a2e',
+    color: C.text,
     margin: '0 0 8px',
   },
   featureDesc: {
     fontSize: 14,
-    color: '#64748b',
+    color: C.textSecondary,
     lineHeight: 1.6,
     margin: 0,
   },
   footer: {
     padding: '32px 48px',
-    borderTop: '1px solid #e9edf2',
-    backgroundColor: '#fff',
+    borderTop: '1px solid ' + C.border,
+    backgroundColor: C.white,
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     fontSize: 13,
-    color: '#94a3b8',
+    color: C.iconGray,
   },
   footerLinks: {
     display: 'flex',
     gap: 24,
   },
   footerLink: {
-    color: '#64748b',
+    color: C.textSecondary,
     cursor: 'pointer',
     textDecoration: 'none',
     fontSize: 13,
@@ -208,43 +220,41 @@ const styles = {
 const features = [
   {
     icon: '💬',
-    bg: '#eef2ff',
+    bg: '#dcf8c6',
     title: 'Real-time Chat',
-    desc: 'Instant messaging with typing indicators, reactions, threads, and file sharing — just like Slack or Discord.',
+    desc: 'Instant messaging with typing indicators, reactions, threads, and file sharing — just like WhatsApp.',
   },
   {
     icon: '📹',
-    bg: '#f0fdf4',
+    bg: '#dcf8c6',
     title: 'Video & Audio Calls',
     desc: 'Peer-to-peer WebRTC video calls with screen sharing. No extra software needed.',
   },
   {
     icon: '🤖',
-    bg: '#fefce8',
+    bg: '#dcf8c6',
     title: 'AI Assistant',
     desc: 'Built-in AI that summarizes channels, extracts action items, and answers questions from your chat history.',
   },
   {
     icon: '🔐',
-    bg: '#fef2f2',
+    bg: '#dcf8c6',
     title: 'Enterprise Security',
     desc: 'Role-based access control, email invites, JWT authentication, and granular permissions for every workspace.',
   },
   {
     icon: '📊',
-    bg: '#f5f3ff',
+    bg: '#dcf8c6',
     title: 'Workspace Management',
     desc: 'Create workspaces, organize channels, manage members, and control access with Owner/Admin/Member roles.',
   },
   {
     icon: '💎',
-    bg: '#ecfeff',
+    bg: '#dcf8c6',
     title: 'Pro Features',
     desc: 'Unlimited AI queries, semantic search across messages, higher file upload limits, and priority support.',
   },
 ]
-
-const icons = ['🎯', '⚡', '🎨']
 
 export default function Landing() {
   const navigate = useNavigate()
@@ -278,7 +288,7 @@ export default function Landing() {
         </h1>
         <p style={styles.heroSub}>
           The all-in-one platform for teams — chat, call, share files, and
-          summarize your work with AI. Built for modern startups.
+          summarize your work with AI. Built for modern teams.
         </p>
         <div style={styles.heroBtns}>
           <button
@@ -320,7 +330,7 @@ export default function Landing() {
       </section>
 
       <footer style={styles.footer}>
-        <span>© 2026 TeamCollab. Built with ❤️</span>
+        <span>© 2026 TeamCollab.</span>
         <div style={styles.footerLinks}>
           <Link to="/about" style={styles.footerLink}>About</Link>
           <span style={styles.footerLink}>Privacy</span>
