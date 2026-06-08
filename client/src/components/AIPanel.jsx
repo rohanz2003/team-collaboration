@@ -68,9 +68,9 @@ export default function AIPanel({ channelId, messages, onClose }) {
   const tabBtn = (name, active) => ({
     flex: 1, padding: '8px 0', border: 'none',
     backgroundColor: 'transparent',
-    color: active ? '#075E54' : '#8696a0',
+    color: active ? '#6366f1' : '#8696a0',
     fontSize: 12, fontWeight: 600, cursor: 'pointer',
-    borderBottom: active ? '2px solid #075E54' : '2px solid transparent',
+    borderBottom: active ? '2px solid #6366f1' : '2px solid transparent',
     transition: 'color 0.15s, border-color 0.15s',
   })
 
@@ -89,7 +89,7 @@ export default function AIPanel({ channelId, messages, onClose }) {
           padding: '10px 14px',
           borderBottom: '1px solid #e9edef',
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          backgroundColor: '#075E54',
+          background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -136,7 +136,7 @@ export default function AIPanel({ channelId, messages, onClose }) {
                 padding: '8px 12px',
                 borderRadius: msg.role === 'user' ? '8px 0px 8px 8px' : '0px 8px 8px 8px',
                 boxShadow: '0 1px 1px rgba(0,0,0,0.06)',
-                backgroundColor: msg.role === 'user' ? '#dcf8c6' : '#fff',
+                backgroundColor: msg.role === 'user' ? '#eef2ff' : '#fff',
                 border: '1px solid #e9edef',
                 fontSize: 13, color: '#111b21', lineHeight: 1.5,
                 maxWidth: '85%',
@@ -153,7 +153,7 @@ export default function AIPanel({ channelId, messages, onClose }) {
                       onClick={() => window.dispatchEvent(new CustomEvent('open-upgrade-modal'))}
                       style={{
                         padding: '5px 12px', borderRadius: 6, border: 'none',
-                        backgroundColor: '#25D366', color: '#fff',
+                        backgroundColor: '#6366f1', color: '#fff',
                         fontSize: 12, fontWeight: 600, cursor: 'pointer',
                       }}
                     >
@@ -209,7 +209,7 @@ export default function AIPanel({ channelId, messages, onClose }) {
                         borderRadius: 6, border: '1px solid #e9edef',
                         marginBottom: 4, fontSize: 12, color: '#111b21',
                       }}>
-                        <svg width="10" height="10" viewBox="0 0 16 16" fill="#075E54" style={{ marginTop: 2, flexShrink: 0 }}>
+                        <svg width="10" height="10" viewBox="0 0 16 16" fill="#6366f1" style={{ marginTop: 2, flexShrink: 0 }}>
                           <path d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm0 7A3.5 3.5 0 0 0 4.5 12v.5c0 .28.22.5.5.5h6c.28 0 .5-.22.5-.5V12A3.5 3.5 0 0 0 8 8Z"/>
                         </svg>
                         {kp}
@@ -228,7 +228,7 @@ export default function AIPanel({ channelId, messages, onClose }) {
                         borderRadius: 6, border: '1px solid #e9edef',
                         marginBottom: 4, fontSize: 12, color: '#111b21',
                       }}>
-                        <svg width="12" height="12" viewBox="0 0 16 16" fill="#25D366" style={{ marginTop: 2, flexShrink: 0 }}>
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="#6366f1" style={{ marginTop: 2, flexShrink: 0 }}>
                           <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/>
                         </svg>
                         {task.task || task}
@@ -264,7 +264,7 @@ export default function AIPanel({ channelId, messages, onClose }) {
                     color: '#111b21', fontSize: 12, cursor: 'pointer',
                     width: '100%', transition: 'border-color 0.15s',
                   }}
-                  onMouseEnter={(e) => e.currentTarget.style.borderColor = '#25D366'}
+                  onMouseEnter={(e) => e.currentTarget.style.borderColor = '#6366f1'}
                   onMouseLeave={(e) => e.currentTarget.style.borderColor = '#e9edef'}
                 >
                   Refresh Summary
@@ -301,7 +301,7 @@ export default function AIPanel({ channelId, messages, onClose }) {
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 4,
                 padding: '7px 14px', borderRadius: 6, border: 'none',
-                backgroundColor: loading || !query.trim() ? '#e9edef' : '#25D366',
+                backgroundColor: loading || !query.trim() ? '#e9edef' : '#6366f1',
                 color: '#fff', fontSize: 12, fontWeight: 600,
                 cursor: loading || !query.trim() ? 'not-allowed' : 'pointer',
                 whiteSpace: 'nowrap',
