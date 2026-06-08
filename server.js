@@ -34,6 +34,7 @@ const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
   'http://localhost:4173',
+  'https://team-collaboration-ruby.vercel.app',
   process.env.FRONTEND_URL,
 ].filter(Boolean);
 
@@ -82,7 +83,11 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.get('/', (req, res) => {
-  res.json({ message: 'Team Collaboration API running' });
+  res.json({ message: 'Team Collaboration API running', status: 'ok', timestamp: new Date().toISOString() });
+});
+
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', message: 'Server is running', timestamp: new Date().toISOString() });
 });
 
 app.use(notFound);

@@ -7,6 +7,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 15000,
 })
 
 api.interceptors.request.use(
@@ -23,10 +24,20 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token')
-      localStorage.removeItem('user')
-      window.location.href = '/login'
+    if (error.response) {
+      if (error.response.status === 401) {
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
+        window.location.href = '/login'
+      }
+    } else if (error.request) {
+      return Promise.reject({
+        response: {
+          data: {
+            message: `Cannot reach server. Make sure the backend is running at ${api.defaults.baseURL}`,
+          },
+        },
+      })
     }
     return Promise.reject(error)
   }
