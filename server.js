@@ -50,6 +50,15 @@ app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Rewrite requests missing /api prefix
+app.use((req, res, next) => {
+  const prefixes = ['/auth', '/workspace', '/channel', '/message', '/upload', '/invite', '/notification', '/ai', '/payment'];
+  if (prefixes.some((p) => req.path.startsWith(p)) && !req.path.startsWith('/api')) {
+    req.url = '/api' + req.url;
+  }
+  next();
+});
+
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/workspace', apiLimiter, workspaceRoutes);
 app.use('/api/channel', apiLimiter, channelRoutes);

@@ -1,9 +1,13 @@
 import axios from 'axios'
 
-const RENDER_API = 'https://team-collab-api-9yzu.onrender.com/api'
+const toBaseUrl = (url) => {
+  if (!url) return 'https://team-collab-api-9yzu.onrender.com/api'
+  const s = url.replace(/\/+$/, '')
+  return s.endsWith('/api') ? s : s + '/api'
+}
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || RENDER_API,
+  baseURL: toBaseUrl(import.meta.env.VITE_API_URL),
   headers: {
     'Content-Type': 'application/json',
   },
