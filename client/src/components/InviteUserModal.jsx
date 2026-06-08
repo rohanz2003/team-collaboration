@@ -93,7 +93,7 @@ export default function InviteUserModal({
             marginBottom: 20,
           }}
         >
-          <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: '#1a202c' }}>
+          <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: '#111b21' }}>
             Manage Workspace
           </h2>
           <button
@@ -103,7 +103,7 @@ export default function InviteUserModal({
               backgroundColor: 'transparent',
               fontSize: 20,
               cursor: 'pointer',
-              color: '#a0aec0',
+              color: '#8696a0',
               padding: 0,
               lineHeight: 1,
             }}
@@ -113,7 +113,7 @@ export default function InviteUserModal({
         </div>
 
         <div style={{ marginBottom: 24 }}>
-          <h3 style={{ fontSize: 14, fontWeight: 600, color: '#4a5568', margin: '0 0 12px' }}>
+          <h3 style={{ fontSize: 14, fontWeight: 600, color: '#667781', margin: '0 0 12px' }}>
             Invite by Email
           </h3>
           <form onSubmit={handleSend} style={{ display: 'flex', gap: 8 }}>
@@ -125,11 +125,12 @@ export default function InviteUserModal({
               style={{
                 flex: 1,
                 padding: '10px 14px',
-                border: '1px solid #cbd5e0',
+                border: '1px solid #e9edef',
                 borderRadius: 6,
                 fontSize: 14,
                 outline: 'none',
                 fontFamily: 'inherit',
+                color: '#111b21',
               }}
             />
             <button
@@ -139,7 +140,7 @@ export default function InviteUserModal({
                 padding: '10px 20px',
                 borderRadius: 6,
                 border: 'none',
-                backgroundColor: loading || !email.trim() ? '#cbd5e0' : '#3182ce',
+                backgroundColor: loading || !email.trim() ? '#e9edef' : '#25D366',
                 color: '#fff',
                 fontSize: 14,
                 fontWeight: 600,
@@ -150,10 +151,10 @@ export default function InviteUserModal({
             </button>
           </form>
           {message && (
-            <p style={{ color: '#48bb78', fontSize: 13, margin: '8px 0 0' }}>{message}</p>
+            <p style={{ color: '#25D366', fontSize: 13, margin: '8px 0 0' }}>{message}</p>
           )}
           {error && (
-            <p style={{ color: '#e53e3e', fontSize: 13, margin: '8px 0 0' }}>{error}</p>
+            <p style={{ color: '#f85149', fontSize: 13, margin: '8px 0 0' }}>{error}</p>
           )}
         </div>
 
@@ -171,8 +172,8 @@ export default function InviteUserModal({
                 padding: '6px 14px',
                 borderRadius: 6,
                 border: 'none',
-                backgroundColor: !showSent ? '#3182ce' : '#e2e8f0',
-                color: !showSent ? '#fff' : '#4a5568',
+                backgroundColor: !showSent ? '#075E54' : '#f0f2f5',
+                color: !showSent ? '#fff' : '#667781',
                 fontSize: 12,
                 fontWeight: 600,
                 cursor: 'pointer',
@@ -186,8 +187,8 @@ export default function InviteUserModal({
                 padding: '6px 14px',
                 borderRadius: 6,
                 border: 'none',
-                backgroundColor: showSent ? '#3182ce' : '#e2e8f0',
-                color: showSent ? '#fff' : '#4a5568',
+                backgroundColor: showSent ? '#075E54' : '#f0f2f5',
+                color: showSent ? '#fff' : '#667781',
                 fontSize: 12,
                 fontWeight: 600,
                 cursor: 'pointer',
@@ -200,7 +201,7 @@ export default function InviteUserModal({
           {!showSent && (
             <div>
               {invites.filter((i) => i.status === 'pending').length === 0 && (
-                <p style={{ color: '#a0aec0', fontSize: 13, textAlign: 'center', padding: 16 }}>
+                <p style={{ color: '#8696a0', fontSize: 13, textAlign: 'center', padding: 16 }}>
                   No pending invites
                 </p>
               )}
@@ -214,19 +215,19 @@ export default function InviteUserModal({
                       justifyContent: 'space-between',
                       alignItems: 'center',
                       padding: '8px 12px',
-                      backgroundColor: '#f7fafc',
+                      backgroundColor: '#f0f2f5',
                       borderRadius: 6,
                       marginBottom: 6,
                     }}
                   >
                     <div>
-                      <span style={{ fontSize: 13, color: '#2d3748' }}>{inv.email}</span>
+                      <span style={{ fontSize: 13, color: '#111b21' }}>{inv.email}</span>
                       <span
                         style={{
                           fontSize: 11,
-                          color: '#ecc94b',
+                          color: '#b8950e',
                           marginLeft: 8,
-                          backgroundColor: '#fefcbf',
+                          backgroundColor: '#fef9c3',
                           padding: '1px 6px',
                           borderRadius: 4,
                         }}
@@ -239,7 +240,7 @@ export default function InviteUserModal({
                       style={{
                         border: 'none',
                         backgroundColor: 'transparent',
-                        color: '#e53e3e',
+                        color: '#f85149',
                         cursor: 'pointer',
                         fontSize: 12,
                         padding: '4px 8px',
@@ -255,7 +256,7 @@ export default function InviteUserModal({
           {showSent && (
             <div>
               {invites.filter((i) => i.status !== 'pending').length === 0 && (
-                <p style={{ color: '#a0aec0', fontSize: 13, textAlign: 'center', padding: 16 }}>
+                <p style={{ color: '#8696a0', fontSize: 13, textAlign: 'center', padding: 16 }}>
                   No sent invites
                 </p>
               )}
@@ -269,16 +270,16 @@ export default function InviteUserModal({
                       justifyContent: 'space-between',
                       alignItems: 'center',
                       padding: '8px 12px',
-                      backgroundColor: '#f7fafc',
+                      backgroundColor: '#f0f2f5',
                       borderRadius: 6,
                       marginBottom: 6,
                     }}
                   >
-                    <span style={{ fontSize: 13, color: '#4a5568' }}>{inv.email}</span>
+                    <span style={{ fontSize: 13, color: '#667781' }}>{inv.email}</span>
                     <span
                       style={{
                         fontSize: 11,
-                        color: '#718096',
+                        color: '#667781',
                         textTransform: 'capitalize',
                       }}
                     >

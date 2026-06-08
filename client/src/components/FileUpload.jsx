@@ -99,14 +99,14 @@ export default function FileUpload({ onFileSent, channelId }) {
           style={{
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
             background: 'none', border: 'none', cursor: 'pointer',
-            padding: '6px', borderRadius: 6,
-            color: '#656d76', lineHeight: 1, flexShrink: 0,
+            padding: '6px', borderRadius: '50%',
+            color: '#8696a0', lineHeight: 1, flexShrink: 0,
             transition: 'background-color 0.15s',
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#e8ecf0' }}
+          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#f0f2f5' }}
           onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}
         >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <svg width="22" height="22" viewBox="0 0 16 16" fill="currentColor">
             <path d="M3.75 2h8.5a.75.75 0 0 1 .75.75v8.5a.75.75 0 0 1-.75.75h-8.5a.75.75 0 0 1-.75-.75v-8.5A.75.75 0 0 1 3.75 2ZM8 4a.75.75 0 0 1 .75.75v1.5h1.5a.75.75 0 0 1 0 1.5h-1.5v1.5a.75.75 0 0 1-1.5 0v-1.5h-1.5a.75.75 0 0 1 0-1.5h1.5v-1.5A.75.75 0 0 1 8 4Z"/>
           </svg>
         </button>

@@ -20,8 +20,19 @@ function Message({ msg, isOwn, onReact, onEdit, onDelete, onReply, onOpenThread 
   const isDeleted = msg.deleted
 
   const initial = (msg.sender?.name?.charAt(0) || '?').toUpperCase()
-  const colors = ['#0969da', '#8250df', '#cf222e', '#1a7f37', '#bf3989', '#633c01']
+  const colors = ['#075E54', '#128C7E', '#25D366', '#34B7F1']
   const colorIdx = (msg.sender?._id || '').split('').reduce((a, c) => a + c.charCodeAt(0), 0) % colors.length
+
+  const bubbleStyle = {
+    padding: '6px 12px',
+    borderRadius: isOwn ? '8px 0px 8px 8px' : '0px 8px 8px 8px',
+    backgroundColor: isOwn ? '#dcf8c6' : '#ffffff',
+    color: '#111b21',
+    fontSize: 14, lineHeight: 1.45,
+    wordBreak: 'break-word',
+    boxShadow: '0 1px 1px rgba(0,0,0,0.06)',
+    position: 'relative',
+  }
 
   return (
     <div
@@ -29,67 +40,59 @@ function Message({ msg, isOwn, onReact, onEdit, onDelete, onReply, onOpenThread 
       style={{
         display: 'flex',
         flexDirection: isOwn ? 'row-reverse' : 'row',
-        gap: 10,
-        marginBottom: 4,
+        gap: 8,
+        marginBottom: 2,
         position: 'relative',
-        padding: '6px 16px',
-        borderRadius: 6,
-        transition: 'background-color 0.1s',
+        padding: '3px 16px',
       }}
-      onMouseEnter={(e) => { setShowActions(true); e.currentTarget.style.backgroundColor = '#f6f8fa' }}
-      onMouseLeave={(e) => { setShowActions(false); e.currentTarget.style.backgroundColor = 'transparent' }}
+      onMouseEnter={() => setShowActions(true)}
+      onMouseLeave={() => setShowActions(false)}
     >
-      <div
-        style={{
+      {!isOwn && (
+        <div style={{
           width: 32, height: 32, borderRadius: '50%',
-          backgroundColor: isDeleted ? '#d0d7de' : colors[colorIdx],
-          color: '#fff',
+          backgroundColor: isDeleted ? '#e9edef' : colors[colorIdx],
+          color: '#fff', flexShrink: 0, marginTop: 2,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: 12, fontWeight: 600,
-          flexShrink: 0, marginTop: 1,
-        }}
-      >
-        {isDeleted ? (
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
-            <path d="M6.5 1.75a.25.25 0 0 1 .25-.25h2.5a.25.25 0 0 1 .25.25V3h-3V1.75Zm4.5 0V3h2.25a.75.75 0 0 1 0 1.5h-.5l-.721 9.673A1.75 1.75 0 0 1 10.282 16H5.718a1.75 1.75 0 0 1-1.747-1.827L3.25 4.5h-.5a.75.75 0 0 1 0-1.5H5V1.75A1.75 1.75 0 0 1 6.75 0h2.5A1.75 1.75 0 0 1 11 1.75ZM5.75 6.5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5a.75.75 0 0 1 .75-.75Zm4.5 0a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5a.75.75 0 0 1 .75-.75Z"/>
-          </svg>
-        ) : initial}
-      </div>
-      <div style={{ maxWidth: '72%', minWidth: 0 }}>
+        }}>
+          {isDeleted ? (
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M6.5 1.75a.25.25 0 0 1 .25-.25h2.5a.25.25 0 0 1 .25.25V3h-3V1.75Zm4.5 0V3h2.25a.75.75 0 0 1 0 1.5h-.5l-.721 9.673A1.75 1.75 0 0 1 10.282 16H5.718a1.75 1.75 0 0 1-1.747-1.827L3.25 4.5h-.5a.75.75 0 0 1 0-1.5H5V1.75A1.75 1.75 0 0 1 6.75 0h2.5A1.75 1.75 0 0 1 11 1.75Z"/>
+            </svg>
+          ) : initial}
+        </div>
+      )}
+      <div style={{ maxWidth: '75%', minWidth: 0 }}>
         <div
           style={{
             display: 'flex',
             alignItems: 'baseline',
             gap: 6,
-            marginBottom: 2,
+            marginBottom: 1,
             flexDirection: isOwn ? 'row-reverse' : 'row',
+            paddingLeft: isOwn ? 0 : 2,
           }}
         >
-          <span style={{ fontSize: 12, fontWeight: 600, color: '#0d1117' }}>
-            {isDeleted ? 'Deleted' : (msg.sender?.name || 'Unknown')}
-          </span>
-          <span style={{ fontSize: 11, color: '#656d76' }}>
-            {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-          </span>
-          {msg.edited && !isDeleted && (
-            <span style={{ fontSize: 10, color: '#8b949e' }}>edited</span>
+          {!isOwn && (
+            <span style={{ fontSize: 11, fontWeight: 600, color: colors[colorIdx] }}>
+              {msg.sender?.name || 'Unknown'}
+            </span>
           )}
         </div>
 
         {msg.replyTo && !isDeleted && (
-          <div
-            style={{
-              fontSize: 11, color: '#656d76', marginBottom: 2,
-              padding: '2px 10px',
-              borderLeft: '2px solid #0969da',
-              borderRadius: 0,
-              display: 'inline-block',
-              maxWidth: '100%',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-            }}
-          >
+          <div style={{
+            fontSize: 11, color: '#667781', marginBottom: 2,
+            padding: '3px 10px',
+            borderLeft: `2px solid ${isOwn ? '#25D366' : '#075E54'}`,
+            display: 'inline-block',
+            maxWidth: '100%', overflow: 'hidden',
+            textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+            backgroundColor: isOwn ? '#c6ed9e' : '#f5f6f6',
+            borderRadius: '4px 4px 0 4px',
+            marginTop: 2,
+          }}>
             <span style={{ fontWeight: 600 }}>
               {msg.replyTo.sender?.name || 'Unknown'}
             </span>
@@ -98,28 +101,28 @@ function Message({ msg, isOwn, onReact, onEdit, onDelete, onReply, onOpenThread 
         )}
 
         {isDeleted ? (
-          <div
-            style={{
-              padding: '4px 12px', borderRadius: 6,
-              backgroundColor: '#f6f8fa', color: '#8b949e',
-              fontSize: 12, fontStyle: 'italic',
-            }}
-          >
+          <div style={{
+            padding: '4px 12px', borderRadius: 8,
+            backgroundColor: '#f0f2f5', color: '#8696a0',
+            fontSize: 12, fontStyle: 'italic',
+          }}>
             Message deleted
           </div>
         ) : isFile ? (
-          <MessageFile msg={msg} />
+          <div style={bubbleStyle}>
+            <MessageFile msg={msg} />
+          </div>
         ) : (
-          <div
-            style={{
-              padding: '6px 12px', borderRadius: 6,
-              backgroundColor: isOwn ? '#ddf4ff' : '#f6f8fa',
-              color: '#0d1117',
-              fontSize: 14, lineHeight: 1.45,
-              wordBreak: 'break-word',
-            }}
-          >
+          <div style={bubbleStyle}>
             {msg.text}
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 2,
+              justifyContent: 'flex-end', marginTop: 2,
+              fontSize: 11, color: '#667781',
+            }}>
+              {msg.edited && <span style={{ fontSize: 10 }}>edited</span>}
+              <span>{new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+            </div>
           </div>
         )}
 
@@ -136,9 +139,8 @@ function Message({ msg, isOwn, onReact, onEdit, onDelete, onReply, onOpenThread 
             onClick={() => onOpenThread?.(msg._id)}
             style={{
               border: 'none', backgroundColor: 'transparent',
-              color: '#0969da', fontSize: 11, fontWeight: 500,
-              cursor: 'pointer', padding: '1px 0',
-              marginTop: 1,
+              color: '#075E54', fontSize: 11, fontWeight: 500,
+              cursor: 'pointer', padding: '1px 4px', marginTop: 1,
             }}
           >
             View thread
@@ -180,9 +182,9 @@ export default function MessageBox({
 
   if (loading) {
     return (
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8b949e', fontSize: 14 }}>
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8696a0', fontSize: 14, backgroundColor: '#efeae2' }}>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style={{ marginRight: 8, animation: 'spin 1s linear infinite' }}>
-          <path d="M8 0a.75.75 0 0 1 .75.75v2.5a.75.75 0 0 1-1.5 0v-2.5A.75.75 0 0 1 8 0Zm0 10a.75.75 0 0 1 .75.75v2.5a.75.75 0 0 1-1.5 0v-2.5A.75.75 0 0 1 8 10Zm4.384-5.984a.75.75 0 0 1 0 1.06l-1.768 1.768a.75.75 0 0 1-1.06-1.06l1.767-1.768a.75.75 0 0 1 1.06 0Zm-8.84 8.84a.75.75 0 0 1 0-1.06l1.768-1.768a.75.75 0 0 1 1.06 1.06l-1.767 1.768a.75.75 0 0 1-1.06 0Zm10.9-2.564a.75.75 0 0 1-.367.99l-2.317 1.012a.75.75 0 0 1-.622-1.364l2.317-1.012a.75.75 0 0 1 .99.366l-.001.008Zm-10.2-5.784a.75.75 0 0 1-.367.99L1.596 5.587a.75.75 0 0 1-.622-1.364l2.317-1.012a.75.75 0 0 1 .99.366l-.001.008Z"/>
+          <path d="M8 0a.75.75 0 0 1 .75.75v2.5a.75.75 0 0 1-1.5 0v-2.5A.75.75 0 0 1 8 0Zm0 10a.75.75 0 0 1 .75.75v2.5a.75.75 0 0 1-1.5 0v-2.5A.75.75 0 0 1 8 10Z"/>
         </svg>
         Loading messages...
       </div>
@@ -191,13 +193,13 @@ export default function MessageBox({
 
   if (messages.length === 0) {
     return (
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-        <svg width="32" height="32" viewBox="0 0 16 16" fill="#d0d7de">
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, backgroundColor: '#efeae2' }}>
+        <svg width="40" height="40" viewBox="0 0 16 16" fill="#8696a0">
           <path d="M1.5 2h13a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-8a.5.5 0 0 1 .5-.5Zm0-1A1.5 1.5 0 0 0 0 2.5v8A1.5 1.5 0 0 0 1.5 12h13a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 14.5 1h-13Z"/>
           <path d="M8 6.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
           <path d="M12.5 10.5A3.5 3.5 0 0 0 9 7H7a3.5 3.5 0 0 0-3.5 3.5v.5h9v-.5Z"/>
         </svg>
-        <span style={{ color: '#8b949e', fontSize: 14 }}>No messages yet. Start the conversation!</span>
+        <span style={{ color: '#8696a0', fontSize: 14 }}>No messages yet. Start the conversation!</span>
       </div>
     )
   }
@@ -207,7 +209,8 @@ export default function MessageBox({
       style={{
         flex: 1,
         overflowY: 'auto',
-        padding: '4px 16px',
+        padding: '4px 0',
+        backgroundColor: '#efeae2',
       }}
     >
       {messages.map((msg) => (

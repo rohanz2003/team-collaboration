@@ -23,14 +23,14 @@ export default function SummaryButton({ channelId, onSummaryComplete }) {
       style={{
         display: 'inline-flex', alignItems: 'center', gap: 4,
         padding: '6px 12px', borderRadius: 6,
-        border: '1px solid #d0d7de', backgroundColor: loading ? '#f6f8fa' : '#fff',
-        color: loading ? '#8b949e' : '#24292f',
+        border: '1px solid #e9edef', backgroundColor: loading ? '#f0f2f5' : '#fff',
+        color: loading ? '#8696a0' : '#111b21',
         fontSize: 12, fontWeight: 500,
         cursor: loading ? 'not-allowed' : 'pointer',
         transition: 'border-color 0.15s',
       }}
-      onMouseEnter={(e) => { if (!loading) e.currentTarget.style.borderColor = '#0969da' }}
-      onMouseLeave={(e) => { if (!loading) e.currentTarget.style.borderColor = '#d0d7de' }}
+      onMouseEnter={(e) => { if (!loading) e.currentTarget.style.borderColor = '#25D366' }}
+      onMouseLeave={(e) => { if (!loading) e.currentTarget.style.borderColor = '#e9edef' }}
       title="Summarize this channel"
     >
       {loading ? (
