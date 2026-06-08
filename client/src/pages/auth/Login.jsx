@@ -1,7 +1,6 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import FormField from '../../components/ui/FormField'
-import Button from '../../components/ui/Button'
 import Alert from '../../components/ui/Alert'
 import { useForm } from '../../hooks/useForm'
 import { useLogin, useAuth, useClearError } from '../../store/authStore'
@@ -11,37 +10,24 @@ import { ROUTES } from '../../constants/routes'
 const initialValues = { email: '', password: '' }
 const rules = { email: validateEmail, password: validatePassword }
 
-const features = [
-  { icon: '💬', title: 'Real-time Chat', desc: 'Instant messaging with typing indicators and read receipts' },
-  { icon: '📁', title: 'File Sharing', desc: 'Drag & drop files, images, and documents' },
-  { icon: '🎥', title: 'Video Calls', desc: 'HD video calls with screen sharing' },
-  { icon: '🤖', title: 'AI Assistant', desc: 'Smart summaries, action items, and answers' },
-]
-
 export default function Login() {
   const navigate = useNavigate()
   const login = useLogin()
   const { loading, error } = useAuth()
   const clearError = useClearError()
-  const [showPassword, setShowPassword] = useState(false)
   const { values, errors, touched, handleChange, handleBlur, validate } =
     useForm(initialValues, rules)
 
-  useEffect(() => {
-    return () => clearError()
-  }, [clearError])
+  useEffect(() => { return () => clearError() }, [clearError])
 
-  const handleSubmit = useCallback(
-    async (e) => {
-      e.preventDefault()
-      if (!validate()) return
-      try {
-        await login(values.email, values.password)
-        navigate(ROUTES.DASHBOARD)
-      } catch {}
-    },
-    [validate, login, values.email, values.password, navigate]
-  )
+  const handleSubmit = useCallback(async (e) => {
+    e.preventDefault()
+    if (!validate()) return
+    try {
+      await login(values.email, values.password)
+      navigate(ROUTES.DASHBOARD)
+    } catch {}
+  }, [validate, login, values.email, values.password, navigate])
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', fontFamily: "'Inter', sans-serif" }}>
@@ -51,114 +37,91 @@ export default function Login() {
         alignItems: 'center',
         justifyContent: 'center',
         padding: 32,
-        backgroundColor: '#fff',
+        backgroundColor: '#f6f8fa',
       }}>
-        <div style={{ width: '100%', maxWidth: 400 }}>
+        <div style={{ width: '100%', maxWidth: 380 }}>
           <Link to={ROUTES.HOME} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 40, textDecoration: 'none' }}>
             <div style={{
-              width: 38,
-              height: 38,
-              borderRadius: 10,
-              background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+              width: 32,
+              height: 32,
+              borderRadius: 6,
+              backgroundColor: '#0d1117',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               color: '#fff',
-              fontSize: 18,
-              fontWeight: 800,
+              fontSize: 13,
+              fontWeight: 700,
             }}>
               TC
             </div>
-            <span style={{ fontSize: 22, fontWeight: 800, color: '#1a1a2e', letterSpacing: '-0.5px' }}>TeamCollab</span>
+            <span style={{ fontSize: 18, fontWeight: 600, color: '#0d1117' }}>TeamCollab</span>
           </Link>
 
-          <h1 style={{ fontSize: 28, fontWeight: 800, color: '#1a1a2e', margin: '0 0 4px', letterSpacing: '-0.5px' }}>
+          <h1 style={{ fontSize: 22, fontWeight: 600, color: '#0d1117', margin: '0 0 4px' }}>
             Welcome back
           </h1>
-          <p style={{ color: '#64748b', margin: '0 0 28px', fontSize: 15 }}>
-            Sign in to your account to continue
+          <p style={{ color: '#656d76', margin: '0 0 28px', fontSize: 14 }}>
+            Sign in to your account
           </p>
 
-          <Alert message={error} onClose={clearError} />
+          <div style={{
+            backgroundColor: '#fff',
+            border: '1px solid #d0d7de',
+            borderRadius: 8,
+            padding: 24,
+          }}>
+            <Alert message={error} onClose={clearError} />
+            <form onSubmit={handleSubmit} noValidate>
+              <FormField
+                label="Email"
+                name="email"
+                type="email"
+                placeholder="you@example.com"
+                value={values.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={errors.email}
+                touched={touched.email}
+              />
+              <FormField
+                label="Password"
+                name="password"
+                type="password"
+                placeholder="Enter your password"
+                value={values.password}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={errors.password}
+                touched={touched.password}
+              />
+              <button
+                type="submit"
+                disabled={loading}
+                style={{
+                  width: '100%',
+                  padding: '10px 16px',
+                  borderRadius: 6,
+                  border: 'none',
+                  backgroundColor: loading ? '#d0d7de' : '#0969da',
+                  color: '#fff',
+                  fontSize: 14,
+                  fontWeight: 600,
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  marginTop: 8,
+                }}
+              >
+                {loading ? 'Signing in...' : 'Sign in'}
+              </button>
+            </form>
+          </div>
 
-          <form onSubmit={handleSubmit} noValidate>
-            <FormField
-              label="Email"
-              name="email"
-              type="email"
-              placeholder="you@example.com"
-              value={values.email}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={errors.email}
-              touched={touched.email}
-            />
-            <div style={{ marginBottom: 16 }}>
-              <label htmlFor="password" style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 6 }}>
-                Password
-              </label>
-              <div style={{ position: 'relative' }}>
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="Enter your password"
-                  value={values.password}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  style={{
-                    width: '100%',
-                    padding: '10px 40px 10px 14px',
-                    borderRadius: 10,
-                    border: `1.5px solid ${touched.password && errors.password ? '#ef4444' : '#e2e8f0'}`,
-                    fontSize: 14,
-                    outline: 'none',
-                    backgroundColor: '#fff',
-                    fontFamily: 'inherit',
-                    boxSizing: 'border-box',
-                  }}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  style={{
-                    position: 'absolute',
-                    right: 10,
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    border: 'none',
-                    backgroundColor: 'transparent',
-                    cursor: 'pointer',
-                    fontSize: 14,
-                    color: '#94a3b8',
-                    padding: 4,
-                  }}
-                >
-                  {showPassword ? '🙈' : '👁️'}
-                </button>
-              </div>
-              {touched.password && errors.password && (
-                <p style={{ margin: '4px 0 0', fontSize: 12, color: '#ef4444' }}>{errors.password}</p>
-              )}
-            </div>
-
-            <div style={{ marginTop: 8 }}>
-              <Button type="submit" loading={loading} disabled={loading}>
-                Sign In
-              </Button>
-            </div>
-          </form>
-
-          <p style={{ marginTop: 20, fontSize: 14, color: '#64748b', textAlign: 'center' }}>
+          <p style={{ marginTop: 20, fontSize: 13, color: '#656d76', textAlign: 'center' }}>
             Don't have an account?{' '}
-            <Link to={ROUTES.REGISTER} style={{ color: '#6366f1', fontWeight: 600 }}>
+            <Link to={ROUTES.REGISTER} style={{ color: '#0969da', fontWeight: 600, textDecoration: 'none' }}>
               Create one
             </Link>
           </p>
-
-          <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid #e9edf2', textAlign: 'center' }}>
-            <Link to={ROUTES.HOME} style={{ fontSize: 13, color: '#94a3b8' }}>← Back to home</Link>
-          </div>
         </div>
       </div>
 
@@ -166,69 +129,101 @@ export default function Login() {
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
         justifyContent: 'center',
         padding: 48,
-        background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #3730a3 100%)',
+        backgroundColor: '#0d1117',
         position: 'relative',
         overflow: 'hidden',
       }}>
         <div style={{
           position: 'absolute',
-          top: '-20%',
-          right: '-20%',
-          width: 500,
-          height: 500,
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 600,
+          height: 600,
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%)',
+          background: 'radial-gradient(circle at center, rgba(9,105,218,0.08) 0%, transparent 60%)',
         }} />
         <div style={{
           position: 'absolute',
-          bottom: '-10%',
-          left: '-10%',
+          bottom: '-20%',
+          right: '-10%',
           width: 400,
           height: 400,
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%)',
+          background: 'radial-gradient(circle at center, rgba(9,105,218,0.05) 0%, transparent 50%)',
         }} />
 
-        <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', marginBottom: 48 }}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>🚀</div>
-          <h2 style={{ color: '#fff', fontSize: 28, fontWeight: 800, margin: '0 0 8px', letterSpacing: '-0.5px' }}>
-            Team Collaboration, Simplified
-          </h2>
-          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 15, maxWidth: 360, margin: '0 auto', lineHeight: 1.6 }}>
-            All your team communication in one place. Chat, share files, call, and stay organized.
-          </p>
-        </div>
-
-        <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', gap: 16, width: '100%', maxWidth: 380 }}>
-          {features.map((f, i) => (
-            <div key={i} style={{
-              display: 'flex',
-              gap: 14,
-              padding: '14px 18px',
-              backgroundColor: 'rgba(255,255,255,0.05)',
-              borderRadius: 12,
-              border: '1px solid rgba(255,255,255,0.08)',
-            }}>
-              <span style={{ fontSize: 22, flexShrink: 0 }}>{f.icon}</span>
-              <div>
-                <div style={{ color: '#fff', fontSize: 14, fontWeight: 600, marginBottom: 2 }}>{f.title}</div>
-                <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 13 }}>{f.desc}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div style={{ position: 'relative', zIndex: 1, marginTop: 40, textAlign: 'center' }}>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 12, marginBottom: 8 }}>
-            <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#6366f1', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 11, fontWeight: 700 }}>R</div>
-            <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 11, fontWeight: 700 }}>J</div>
-            <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 11, fontWeight: 700 }}>S</div>
-            <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#f59e0b', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 11, fontWeight: 700 }}>A</div>
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <div style={{
+            display: 'inline-block',
+            padding: '6px 14px',
+            borderRadius: 6,
+            border: '1px solid rgba(255,255,255,0.1)',
+            fontSize: 12,
+            color: 'rgba(255,255,255,0.5)',
+            marginBottom: 24,
+          }}>
+            Enterprise-grade team platform
           </div>
-          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12, margin: 0 }}>
+
+          <h2 style={{ color: '#fff', fontSize: 32, fontWeight: 600, margin: '0 0 12px', letterSpacing: '-0.5px', lineHeight: 1.3 }}>
+            Collaborate<br />with confidence
+          </h2>
+          <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, maxWidth: 340, lineHeight: 1.6, margin: '0 0 40px' }}>
+            Secure real-time messaging, file sharing, and video calls for teams of any size.
+          </p>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {[
+              { label: 'Real-time messaging', desc: 'Instant communication with your team' },
+              { label: 'File sharing', desc: 'Share and preview files in-line' },
+              { label: 'Video calls', desc: 'HD video with screen sharing' },
+            ].map((f, i) => (
+              <div key={i} style={{
+                display: 'flex',
+                gap: 12,
+                padding: '12px 16px',
+                backgroundColor: 'rgba(255,255,255,0.03)',
+                borderRadius: 6,
+                border: '1px solid rgba(255,255,255,0.06)',
+              }}>
+                <div style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: '50%',
+                  backgroundColor: '#3fb950',
+                  marginTop: 6,
+                  flexShrink: 0,
+                }} />
+                <div>
+                  <div style={{ color: '#fff', fontSize: 13, fontWeight: 600, marginBottom: 1 }}>{f.label}</div>
+                  <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12 }}>{f.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ marginTop: 32, display: 'flex', gap: 12 }}>
+            {['R', 'J', 'S', 'A'].map((l, i) => (
+              <div key={i} style={{
+                width: 32,
+                height: 32,
+                borderRadius: '50%',
+                border: '2px solid rgba(255,255,255,0.1)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'rgba(255,255,255,0.6)',
+                fontSize: 12,
+                fontWeight: 600,
+              }}>
+                {l}
+              </div>
+            ))}
+          </div>
+          <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 12, margin: '8px 0 0' }}>
             Trusted by remote teams worldwide
           </p>
         </div>
