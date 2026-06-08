@@ -20,18 +20,23 @@ function Message({ msg, isOwn, onReact, onEdit, onDelete, onReply, onOpenThread 
   const isDeleted = msg.deleted
 
   const initial = (msg.sender?.name?.charAt(0) || '?').toUpperCase()
-  const colors = ['#075E54', '#128C7E', '#25D366', '#34B7F1']
+  const colors = ['#6366f1', '#8b5cf6', '#a855f7', '#7c3aed']
   const colorIdx = (msg.sender?._id || '').split('').reduce((a, c) => a + c.charCodeAt(0), 0) % colors.length
 
   const bubbleStyle = {
     padding: '6px 12px',
     borderRadius: isOwn ? '8px 0px 8px 8px' : '0px 8px 8px 8px',
-    backgroundColor: isOwn ? '#dcf8c6' : '#ffffff',
+    backgroundColor: isOwn ? '#eef2ff' : '#ffffff',
     color: '#111b21',
     fontSize: 14, lineHeight: 1.45,
     wordBreak: 'break-word',
     boxShadow: '0 1px 1px rgba(0,0,0,0.06)',
+    border: isOwn ? '1px solid #dde4ff' : '1px solid #e9edef',
     position: 'relative',
+  }
+
+  const handleClick = () => {
+    if (!isDeleted) setShowActions((p) => !p)
   }
 
   return (
@@ -45,8 +50,6 @@ function Message({ msg, isOwn, onReact, onEdit, onDelete, onReply, onOpenThread 
         position: 'relative',
         padding: '3px 16px',
       }}
-      onMouseEnter={() => setShowActions(true)}
-      onMouseLeave={() => setShowActions(false)}
     >
       {!isOwn && (
         <div style={{
@@ -63,7 +66,7 @@ function Message({ msg, isOwn, onReact, onEdit, onDelete, onReply, onOpenThread 
           ) : initial}
         </div>
       )}
-      <div style={{ maxWidth: '75%', minWidth: 0 }}>
+      <div style={{ maxWidth: '75%', minWidth: 0 }} onClick={handleClick}>
         <div
           style={{
             display: 'flex',
@@ -85,11 +88,11 @@ function Message({ msg, isOwn, onReact, onEdit, onDelete, onReply, onOpenThread 
           <div style={{
             fontSize: 11, color: '#667781', marginBottom: 2,
             padding: '3px 10px',
-            borderLeft: `2px solid ${isOwn ? '#25D366' : '#075E54'}`,
+            borderLeft: `2px solid ${isOwn ? '#6366f1' : '#8b5cf6'}`,
             display: 'inline-block',
             maxWidth: '100%', overflow: 'hidden',
             textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-            backgroundColor: isOwn ? '#c6ed9e' : '#f5f6f6',
+            backgroundColor: isOwn ? '#dde4ff' : '#f5f6f6',
             borderRadius: '4px 4px 0 4px',
             marginTop: 2,
           }}>
@@ -136,10 +139,10 @@ function Message({ msg, isOwn, onReact, onEdit, onDelete, onReply, onOpenThread 
 
         {!isDeleted && msg.replyTo && (
           <button
-            onClick={() => onOpenThread?.(msg._id)}
+            onClick={(e) => { e.stopPropagation(); onOpenThread?.(msg._id) }}
             style={{
               border: 'none', backgroundColor: 'transparent',
-              color: '#075E54', fontSize: 11, fontWeight: 500,
+              color: '#6366f1', fontSize: 11, fontWeight: 500,
               cursor: 'pointer', padding: '1px 4px', marginTop: 1,
             }}
           >
@@ -147,15 +150,21 @@ function Message({ msg, isOwn, onReact, onEdit, onDelete, onReply, onOpenThread 
           </button>
         )}
 
-        {showActions && (
-          <MessageActions
-            isOwn={isOwn}
-            messageId={msg._id}
-            onEdit={() => onEdit?.(msg)}
-            onDelete={onDelete}
-            onReply={onReply}
-            isDeleted={isDeleted}
-          />
+        {showActions && !isDeleted && (
+          <div style={{
+            marginTop: 4,
+            display: 'flex',
+            justifyContent: isOwn ? 'flex-end' : 'flex-start',
+          }}>
+            <MessageActions
+              isOwn={isOwn}
+              messageId={msg._id}
+              onEdit={() => { onEdit?.(msg); setShowActions(false) }}
+              onDelete={(id) => { onDelete?.(id); setShowActions(false) }}
+              onReply={(id) => { onReply?.(id); setShowActions(false) }}
+              isDeleted={isDeleted}
+            />
+          </div>
         )}
       </div>
     </div>
@@ -182,7 +191,7 @@ export default function MessageBox({
 
   if (loading) {
     return (
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8696a0', fontSize: 14, backgroundColor: '#efeae2' }}>
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8696a0', fontSize: 14 }}>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style={{ marginRight: 8, animation: 'spin 1s linear infinite' }}>
           <path d="M8 0a.75.75 0 0 1 .75.75v2.5a.75.75 0 0 1-1.5 0v-2.5A.75.75 0 0 1 8 0Zm0 10a.75.75 0 0 1 .75.75v2.5a.75.75 0 0 1-1.5 0v-2.5A.75.75 0 0 1 8 10Z"/>
         </svg>
@@ -193,7 +202,7 @@ export default function MessageBox({
 
   if (messages.length === 0) {
     return (
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, backgroundColor: '#efeae2' }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
         <svg width="40" height="40" viewBox="0 0 16 16" fill="#8696a0">
           <path d="M1.5 2h13a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-8a.5.5 0 0 1 .5-.5Zm0-1A1.5 1.5 0 0 0 0 2.5v8A1.5 1.5 0 0 0 1.5 12h13a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 14.5 1h-13Z"/>
           <path d="M8 6.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
@@ -210,7 +219,6 @@ export default function MessageBox({
         flex: 1,
         overflowY: 'auto',
         padding: '4px 0',
-        backgroundColor: '#efeae2',
       }}
     >
       {messages.map((msg) => (

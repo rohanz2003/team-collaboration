@@ -11,16 +11,12 @@ export default function MessageActions({
   return (
     <div
       style={{
-        display: 'flex', gap: 2,
-        position: 'absolute',
-        top: 0,
-        [isOwn ? 'left' : 'right']: 0,
+        display: 'inline-flex', gap: 2,
         backgroundColor: '#ffffff',
         border: '1px solid #e9edef',
         borderRadius: 20,
-        padding: '2px 6px',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.12)',
-        zIndex: 5,
+        padding: '2px 4px',
+        boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
       }}
     >
       <button
@@ -28,7 +24,7 @@ export default function MessageActions({
         style={actionBtnStyle}
         title="Reply"
       >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8696a0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
         </svg>
       </button>
@@ -39,7 +35,7 @@ export default function MessageActions({
             style={actionBtnStyle}
             title="Edit"
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8696a0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
             </svg>
           </button>
@@ -48,7 +44,7 @@ export default function MessageActions({
             style={{ ...actionBtnStyle, color: '#f85149' }}
             title="Delete"
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M3 6h18"/>
               <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
             </svg>
@@ -63,7 +59,7 @@ const actionBtnStyle = {
   border: 'none',
   backgroundColor: 'transparent',
   cursor: 'pointer',
-  padding: '6px',
+  padding: '5px',
   color: '#667781',
   borderRadius: '50%',
   lineHeight: 1,
