@@ -8,7 +8,7 @@ import { ROUTES } from '../constants/routes'
 
 const PRIMARY = '#6366f1'
 const PRIMARY_DARK = '#4f46e5'
-const PRIMARY_GRADIENT = 'linear-gradient(135deg, #6366f1, #8b5cf6)'
+const GRADIENT = 'linear-gradient(135deg, #6366f1, #8b5cf6)'
 const BG_GRADIENT = 'linear-gradient(135deg, #f8fafc 0%, #eef2ff 50%, #f0f0ff 100%)'
 const TEXT_PRIMARY = '#1a1a2e'
 const TEXT_SECONDARY = '#475569'
@@ -29,7 +29,7 @@ function WorkspaceCard({ ws, onSelect }) {
       style={{
         backgroundColor: '#fff',
         borderRadius: 12,
-        border: '1px solid #e1e4e8',
+        border: '1px solid #e9edf2',
         cursor: 'pointer',
         transition: 'border-color 0.2s, box-shadow 0.2s, transform 0.2s',
         position: 'relative',
@@ -41,7 +41,7 @@ function WorkspaceCard({ ws, onSelect }) {
         e.currentTarget.style.transform = 'translateY(-2px)'
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = '#e1e4e8'
+        e.currentTarget.style.borderColor = '#e9edf2'
         e.currentTarget.style.boxShadow = 'none'
         e.currentTarget.style.transform = 'translateY(0)'
       }}
@@ -66,7 +66,7 @@ function WorkspaceCard({ ws, onSelect }) {
         </div>
 
         <div style={{ marginBottom: 10 }}>
-          <div style={{ fontSize: 15, fontWeight: 600, color: PRIMARY, marginBottom: 2 }}>{ws.name}</div>
+          <div style={{ fontSize: 15, fontWeight: 600, color: TEXT_PRIMARY, marginBottom: 2 }}>{ws.name}</div>
           <div style={{ fontSize: 12, color: TEXT_MUTED, display: 'flex', alignItems: 'center', gap: 4 }}>
             <span>{ownerName}</span>
             <span style={{ color: BORDER }}>·</span>
@@ -147,7 +147,6 @@ export default function Workspaces() {
     <div style={{ minHeight: '100vh', background: BG_GRADIENT }}>
       <Header
         user={user}
-        title="Workspaces"
         onDashboard={() => navigate(ROUTES.DASHBOARD)}
       />
 
@@ -156,14 +155,14 @@ export default function Workspaces() {
           <div>
             <h1 style={{
               fontSize: 22,
-              fontWeight: 600,
-              color: WHATSAPP_TEAL,
+              fontWeight: 700,
+              color: TEXT_PRIMARY,
               margin: '0 0 2px',
               letterSpacing: '-0.3px',
             }}>
               Workspaces
             </h1>
-            <p style={{ margin: 0, fontSize: 13, color: TEXT_MUTED }}>
+            <p style={{ margin: 0, fontSize: 14, color: TEXT_MUTED }}>
               {workspaces.length} total · {user?.name || 'User'}
             </p>
           </div>
@@ -173,18 +172,18 @@ export default function Workspaces() {
               display: 'inline-flex',
               alignItems: 'center',
               gap: 6,
-              padding: '8px 18px',
+              padding: '8px 20px',
               borderRadius: 8,
-              border: showCreate ? '1px solid #d0d7de' : 'none',
-              backgroundColor: showCreate ? '#fff' : PRIMARY,
-              color: showCreate ? TEXT_PRIMARY : '#fff',
-              fontSize: 13,
+              border: showCreate ? '1px solid #e2e8f0' : 'none',
+              background: showCreate ? '#fff' : GRADIENT,
+              color: showCreate ? TEXT_SECONDARY : '#fff',
+              fontSize: 14,
               fontWeight: 600,
               cursor: 'pointer',
-              transition: 'background-color 0.15s, border-color 0.15s',
+              transition: 'opacity 0.15s',
             }}
-            onMouseEnter={(e) => { if (!showCreate) e.currentTarget.style.backgroundColor = PRIMARY_DARK }}
-            onMouseLeave={(e) => { if (!showCreate) e.currentTarget.style.backgroundColor = PRIMARY }}
+            onMouseEnter={(e) => { if (!showCreate) e.currentTarget.style.opacity = '0.9' }}
+            onMouseLeave={(e) => { if (!showCreate) e.currentTarget.style.opacity = '1' }}
           >
             <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" style={{ transform: showCreate ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s' }}>
               <path d="M8 2a.75.75 0 0 1 .75.75v4.5h4.5a.75.75 0 0 1 0 1.5h-4.5v4.5a.75.75 0 0 1-1.5 0v-4.5h-4.5a.75.75 0 0 1 0-1.5h4.5v-4.5A.75.75 0 0 1 8 2Z"/>
@@ -197,7 +196,7 @@ export default function Workspaces() {
           <div style={{
             padding: '16px 20px',
             backgroundColor: '#fff',
-            border: '1px solid #d0d7de',
+            border: '1px solid #e9edf2',
             borderRadius: 12,
             marginBottom: 20,
             boxShadow: '0 4px 12px rgba(0,0,0,0.06)',
@@ -207,7 +206,7 @@ export default function Workspaces() {
                 width: 36,
                 height: 36,
                 borderRadius: 8,
-                background: PRIMARY_GRADIENT,
+                background: GRADIENT,
                 border: 'none',
                 display: 'flex',
                 alignItems: 'center',
@@ -228,10 +227,12 @@ export default function Workspaces() {
                 style={{
                   flex: 1,
                   padding: '8px 12px',
-                  border: '1px solid #d0d7de',
+                  border: '1px solid #e2e8f0',
                   borderRadius: 6,
                   fontSize: 14,
                   outline: 'none',
+                  fontFamily: 'inherit',
+                  color: TEXT_PRIMARY,
                 }}
               />
               <button
@@ -241,15 +242,15 @@ export default function Workspaces() {
                   padding: '8px 18px',
                   borderRadius: 6,
                   border: 'none',
-                  backgroundColor: name.trim() ? PRIMARY : '#d0d7de',
+                  background: name.trim() ? GRADIENT : '#e2e8f0',
                   color: '#fff',
-                  fontSize: 13,
+                  fontSize: 14,
                   fontWeight: 600,
                   cursor: name.trim() ? 'pointer' : 'not-allowed',
-                  transition: 'background-color 0.15s',
+                  transition: 'opacity 0.15s',
                 }}
-                onMouseEnter={(e) => { if (name.trim()) e.currentTarget.style.backgroundColor = PRIMARY_DARK }}
-                onMouseLeave={(e) => { if (name.trim()) e.currentTarget.style.backgroundColor = PRIMARY }}
+                onMouseEnter={(e) => { if (name.trim()) e.currentTarget.style.opacity = '0.9' }}
+                onMouseLeave={(e) => { if (name.trim()) e.currentTarget.style.opacity = '1' }}
               >
                 Create
               </button>
@@ -274,7 +275,8 @@ export default function Workspaces() {
 function Header({ user, onDashboard }) {
   return (
     <div style={{
-      background: PRIMARY_GRADIENT,
+      backgroundColor: '#fff',
+      borderBottom: '1px solid #e9edf2',
       padding: '0 24px',
       position: 'sticky',
       top: 0,
@@ -291,25 +293,23 @@ function Header({ user, onDashboard }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <div onClick={onDashboard} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
             <div style={{
-              width: 28,
-              height: 28,
-              borderRadius: 6,
-              backgroundColor: 'rgba(255,255,255,0.2)',
+              width: 32,
+              height: 32,
+              borderRadius: 8,
+              background: GRADIENT,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               color: '#fff',
-              fontSize: 12,
+              fontSize: 14,
               fontWeight: 700,
             }}>
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M2 1.75C2 .784 2.784 0 3.75 0h2.5C7.216 0 8 .784 8 1.75v2.5A1.75 1.75 0 0 1 6.25 6h-2.5A1.75 1.75 0 0 1 2 4.25Zm8 0C10 .784 10.784 0 11.75 0h2.5C15.216 0 16 .784 16 1.75v2.5A1.75 1.75 0 0 1 14.25 6h-2.5A1.75 1.75 0 0 1 10 4.25ZM2 9.75c0-.966.784-1.75 1.75-1.75h2.5c.966 0 1.75.784 1.75 1.75v2.5A1.75 1.75 0 0 1 6.25 14h-2.5A1.75 1.75 0 0 1 2 12.25Zm8 0c0-.966.784-1.75 1.75-1.75h2.5c.966 0 1.75.784 1.75 1.75v2.5A1.75 1.75 0 0 1 14.25 14h-2.5A1.75 1.75 0 0 1 10 12.25Z"/>
-              </svg>
+              TC
             </div>
-            <span style={{ fontSize: 15, fontWeight: 600, color: '#fff' }}>TeamCollab</span>
+            <span style={{ fontSize: 15, fontWeight: 700, color: TEXT_PRIMARY, letterSpacing: '-0.3px' }}>TeamCollab</span>
           </div>
-          <div style={{ width: 1, height: 20, backgroundColor: 'rgba(255,255,255,0.25)' }} />
-          <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.85)' }}>Workspaces</span>
+          <div style={{ width: 1, height: 20, backgroundColor: '#e9edf2' }} />
+          <span style={{ fontSize: 14, fontWeight: 500, color: TEXT_SECONDARY }}>Workspaces</span>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -317,19 +317,21 @@ function Header({ user, onDashboard }) {
           <div
             onClick={onDashboard}
             style={{
-              width: 28,
-              height: 28,
-              borderRadius: '50%',
-              backgroundColor: PRIMARY,
+              width: 32,
+              height: 32,
+              borderRadius: 8,
+              background: GRADIENT,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               color: '#fff',
-              fontSize: 11,
+              fontSize: 13,
               fontWeight: 600,
               cursor: 'pointer',
               transition: 'opacity 0.15s',
             }}
+            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
           >
             {user?.name?.charAt(0).toUpperCase() || 'U'}
           </div>
@@ -345,26 +347,26 @@ function EmptyState({ onCreate }) {
       padding: '80px 32px',
       textAlign: 'center',
       backgroundColor: '#fff',
-      border: '1px solid #d0d7de',
+      border: '1px solid #e9edf2',
       borderRadius: 12,
     }}>
       <div style={{
         width: 72,
         height: 72,
-        borderRadius: '50%',
-        background: PRIMARY_GRADIENT,
+        borderRadius: 16,
+        background: GRADIENT,
         border: 'none',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         margin: '0 auto 20px',
       }}>
-        <svg width="32" height="32" viewBox="0 0 16 16" fill={'#fff'}>
+        <svg width="32" height="32" viewBox="0 0 16 16" fill="#fff">
           <path d="M2 1.75C2 .784 2.784 0 3.75 0h2.5C7.216 0 8 .784 8 1.75v2.5A1.75 1.75 0 0 1 6.25 6h-2.5A1.75 1.75 0 0 1 2 4.25Zm8 0C10 .784 10.784 0 11.75 0h2.5C15.216 0 16 .784 16 1.75v2.5A1.75 1.75 0 0 1 14.25 6h-2.5A1.75 1.75 0 0 1 10 4.25ZM2 9.75c0-.966.784-1.75 1.75-1.75h2.5c.966 0 1.75.784 1.75 1.75v2.5A1.75 1.75 0 0 1 6.25 14h-2.5A1.75 1.75 0 0 1 2 12.25Zm8 0c0-.966.784-1.75 1.75-1.75h2.5c.966 0 1.75.784 1.75 1.75v2.5A1.75 1.75 0 0 1 14.25 14h-2.5A1.75 1.75 0 0 1 10 12.25Z"/>
         </svg>
       </div>
-      <h2 style={{ fontSize: 18, fontWeight: 600, color: PRIMARY, margin: '0 0 6px' }}>No workspaces yet</h2>
-      <p style={{ color: TEXT_MUTED, fontSize: 14, margin: '0 auto 24px', maxWidth: 380, lineHeight: 1.5 }}>
+      <h2 style={{ fontSize: 20, fontWeight: 700, color: TEXT_PRIMARY, margin: '0 0 6px' }}>No workspaces yet</h2>
+      <p style={{ color: TEXT_MUTED, fontSize: 14, margin: '0 auto 24px', maxWidth: 400, lineHeight: 1.6 }}>
         Workspaces are where your team comes together. Create your first workspace to start collaborating in real-time.
       </p>
       <button
@@ -373,15 +375,15 @@ function EmptyState({ onCreate }) {
           padding: '10px 24px',
           borderRadius: 8,
           border: 'none',
-          backgroundColor: PRIMARY,
+          background: GRADIENT,
           color: '#fff',
           fontSize: 14,
           fontWeight: 600,
           cursor: 'pointer',
-          transition: 'background-color 0.15s',
+          transition: 'opacity 0.15s',
         }}
-        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = WHATSAPP_GREEN_DARK }}
-        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = WHATSAPP_GREEN }}
+        onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+        onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
       >
         Create workspace
       </button>
