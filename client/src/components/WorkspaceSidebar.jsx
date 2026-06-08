@@ -17,9 +17,8 @@ import NotificationBell from './NotificationBell'
 import InviteUserModal from './InviteUserModal'
 import RoleBadge from './RoleBadge'
 
-const WA_TEAL = '#075E54'
-const WA_GREEN = '#25D366'
-const WA_BG = '#efeae2'
+const PRIMARY = '#6366f1'
+const PRIMARY_GRADIENT = 'linear-gradient(135deg, #6366f1, #8b5cf6)'
 
 const btnBase = {
   display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
@@ -83,15 +82,15 @@ export default function WorkspaceSidebar() {
       borderRight: '1px solid #e9edef',
     }}>
       <div style={{
-        backgroundColor: WA_TEAL, padding: '10px 16px',
+        background: PRIMARY_GRADIENT, padding: '10px 16px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         minHeight: 56,
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <svg width="20" height="20" viewBox="0 0 16 16" fill="#ffffff">
+          <svg width="20" height="20" viewBox="0 0 16 16" fill="#fff">
             <path d="M2 1.75C2 .784 2.784 0 3.75 0h2.5C7.216 0 8 .784 8 1.75v2.5A1.75 1.75 0 0 1 6.25 6h-2.5A1.75 1.75 0 0 1 2 4.25Zm8 0C10 .784 10.784 0 11.75 0h2.5C15.216 0 16 .784 16 1.75v2.5A1.75 1.75 0 0 1 14.25 6h-2.5A1.75 1.75 0 0 1 10 4.25ZM2 9.75c0-.966.784-1.75 1.75-1.75h2.5c.966 0 1.75.784 1.75 1.75v2.5A1.75 1.75 0 0 1 6.25 14h-2.5A1.75 1.75 0 0 1 2 12.25Zm8 0c0-.966.784-1.75 1.75-1.75h2.5c.966 0 1.75.784 1.75 1.75v2.5A1.75 1.75 0 0 1 14.25 14h-2.5A1.75 1.75 0 0 1 10 12.25Z"/>
           </svg>
-          <span style={{ fontWeight: 600, fontSize: 16, color: '#ffffff' }}>
+            <span style={{ fontWeight: 600, fontSize: 16, color: '#fff' }}>
             {workspace?.name || 'Workspace'}
           </span>
         </div>
@@ -151,7 +150,7 @@ export default function WorkspaceSidebar() {
           >
             <div style={{
               width: 42, height: 42, borderRadius: '50%',
-              backgroundColor: WA_TEAL,
+              background: PRIMARY_GRADIENT,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               color: '#fff', fontSize: 16, fontWeight: 600, flexShrink: 0,
             }}>
@@ -221,7 +220,7 @@ export default function WorkspaceSidebar() {
               onClick={handleCreateChannel}
               style={{
                 ...btnBase, padding: '4px 12px',
-                backgroundColor: channelName.trim() ? WA_GREEN : '#e9edef',
+                backgroundColor: channelName.trim() ? PRIMARY : '#e9edef',
                 color: channelName.trim() ? '#fff' : '#8696a0',
                 fontSize: 12,
               }}

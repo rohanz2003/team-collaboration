@@ -523,7 +523,7 @@ export default function ChatRoom() {
 
   if (!channel) {
     return (
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8696a0', fontSize: 15, backgroundColor: '#efeae2' }}>
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8696a0', fontSize: 15, background: 'linear-gradient(135deg, #f8fafc 0%, #eef2ff 50%, #f0f0ff 100%)' }}>
         Select a channel to start chatting
       </div>
     )
@@ -534,10 +534,10 @@ export default function ChatRoom() {
   const onlineCount = onlineUsers.length
   const otherOnline = onlineUsers.filter((u) => u.userId !== user._id)
 
-  const WA_TEAL = '#075E54'
-  const WA_GREEN = '#25D366'
+  const PRIMARY = '#6366f1'
+  const GRADIENT = 'linear-gradient(135deg, #6366f1, #8b5cf6)'
 
-  const waIconBtn = {
+  const iconBtn = {
     display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
     background: 'rgba(255,255,255,0.2)', border: 'none',
     color: '#fff', cursor: 'pointer', padding: '6px',
@@ -546,8 +546,8 @@ export default function ChatRoom() {
   }
 
   return (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', backgroundColor: '#efeae2', position: 'relative' }}>
-      <div style={{ padding: '8px 16px', backgroundColor: WA_TEAL, minHeight: 56 }}>
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: 'linear-gradient(135deg, #f8fafc 0%, #eef2ff 50%, #f0f0ff 100%)', position: 'relative' }}>
+      <div style={{ padding: '8px 16px', background: GRADIENT, minHeight: 56 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, height: '100%' }}>
           <div style={{
             width: 36, height: 36, borderRadius: '50%',
@@ -571,7 +571,7 @@ export default function ChatRoom() {
               <button
                 onClick={() => setShowUpgradeModal(true)}
                 style={{
-                  ...waIconBtn, borderRadius: 6, padding: '4px 8px', width: 'auto',
+                  ...iconBtn, borderRadius: 6, padding: '4px 8px', width: 'auto',
                   fontSize: 11, fontWeight: 600, gap: 3,
                 }}
                 title="Upgrade"
@@ -589,7 +589,7 @@ export default function ChatRoom() {
             <button
               onClick={() => setShowAIPanel(!showAIPanel)}
               style={{
-                ...waIconBtn,
+                ...iconBtn,
                 backgroundColor: showAIPanel ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.2)',
               }}
               title="AI"
@@ -600,7 +600,7 @@ export default function ChatRoom() {
             </button>
             <button
               onClick={() => setShowSearch(!showSearch)}
-              style={waIconBtn}
+              style={iconBtn}
               title="Search"
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
@@ -611,7 +611,7 @@ export default function ChatRoom() {
               <>
                 <button
                   onClick={() => startCall(true)}
-                  style={waIconBtn}
+                  style={iconBtn}
                   title="Video call"
                 >
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
@@ -620,7 +620,7 @@ export default function ChatRoom() {
                 </button>
                 <button
                   onClick={() => startCall(false)}
-                  style={waIconBtn}
+                  style={iconBtn}
                   title="Audio call"
                 >
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
@@ -657,7 +657,7 @@ export default function ChatRoom() {
           />
 
           {typingNames && (
-            <div style={{ padding: '6px 24px', fontSize: 12, color: '#667781', fontStyle: 'italic', backgroundColor: '#efeae2' }}>
+            <div style={{ padding: '6px 24px', fontSize: 12, color: '#667781', fontStyle: 'italic' }}>
               {typingNames} typing...
             </div>
           )}
