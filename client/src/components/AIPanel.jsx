@@ -38,7 +38,7 @@ export default function AIPanel({ channelId, messages, onClose }) {
       } else {
         setConversation((prev) => [
           ...prev,
-          { role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' },
+          { role: 'assistant', content: msg },
         ])
       }
     } finally {
