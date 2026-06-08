@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useUnreadCount, useNotifications } from '../store/notificationStore'
 import useNotificationStore from '../store/notificationStore'
 import { getSocket } from '../socket'
@@ -6,6 +7,7 @@ import { getSocket } from '../socket'
 export default function NotificationBell() {
   const [open, setOpen] = useState(false)
   const dropdownRef = useRef(null)
+  const navigate = useNavigate()
   const unreadCount = useUnreadCount()
   const notifications = useNotifications()
   const fetchNotifications = useNotificationStore((s) => s.fetchNotifications)
@@ -48,11 +50,17 @@ export default function NotificationBell() {
     setOpen(!open)
   }, [open, fetchNotifications])
 
-  const handleMarkRead = useCallback(
-    (id) => {
-      markAsRead(id)
+  const handleNotificationClick = useCallback(
+    (notification) => {
+      if (!notification.read) {
+        markAsRead(notification._id)
+      }
+      if (notification.link) {
+        navigate(notification.link)
+      }
+      setOpen(false)
     },
-    [markAsRead]
+    [markAsRead, navigate]
   )
 
   const handleMarkAll = useCallback(() => {
@@ -172,7 +180,7 @@ export default function NotificationBell() {
             {notifications.map((n) => (
               <div
                 key={n._id}
-                onClick={() => !n.read && handleMarkRead(n._id)}
+                onClick={() => handleNotificationClick(n)}
                 style={{
                   padding: '10px 16px',
                   borderBottom: '1px solid #f7fafc',

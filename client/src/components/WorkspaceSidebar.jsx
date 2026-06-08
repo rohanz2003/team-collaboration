@@ -71,15 +71,22 @@ export default function WorkspaceSidebar() {
         style={{
           padding: '16px 20px',
           borderBottom: '1px solid #2d3748',
-          fontWeight: 700,
-          fontSize: 16,
-          color: '#fff',
           display: 'flex',
           justifyContent: 'space-between',
-          alignItems: 'center',
+          alignItems: 'flex-start',
         }}
       >
-        <span>{workspace?.name || 'Workspace'}</span>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontWeight: 700, fontSize: 16, color: '#fff', marginBottom: 2 }}>
+            {workspace?.name || 'Workspace'}
+          </div>
+          {workspace?.owner?.name && (
+            <div style={{ fontSize: 11, color: '#718096', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              Created by {workspace.owner.name}
+              {workspace.createdAt && ` · ${new Date(workspace.createdAt).toLocaleDateString()}`}
+            </div>
+          )}
+        </div>
         <NotificationBell />
       </div>
 

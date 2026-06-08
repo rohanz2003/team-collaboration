@@ -49,8 +49,7 @@ const sendInvite = async (req, res) => {
       invitedBy: req.user._id,
     });
 
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
-    const inviteLink = `${frontendUrl}/invite?token=${invite.token}`;
+    const inviteLink = `/invite?token=${invite.token}`;
 
     try {
       await sendInviteEmail({
