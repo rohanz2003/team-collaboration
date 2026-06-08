@@ -120,16 +120,17 @@ export default function NotificationBell() {
       {open && (
         <div
           style={{
-            position: 'absolute',
-            top: '100%',
-            right: 0,
+            position: 'fixed',
+            top: 56,
+            right: 16,
             width: 360,
+            maxWidth: 'calc(100vw - 32px)',
             maxHeight: 420,
             backgroundColor: '#fff',
             border: '1px solid #e2e8f0',
             borderRadius: 10,
             boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
-            zIndex: 1000,
+            zIndex: 10000,
             overflow: 'hidden',
             display: 'flex',
             flexDirection: 'column',

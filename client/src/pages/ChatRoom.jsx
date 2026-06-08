@@ -227,6 +227,10 @@ export default function ChatRoom() {
       useCallStore.getState().setRemoteScreenSharing(false)
     })
 
+    socket.on('connect', () => {
+      socket.emit('join-channel', channel._id)
+    })
+
     socket.emit('join-channel', channel._id)
 
     markSeenTimer.current = setInterval(markSeen, 3000)
@@ -247,6 +251,7 @@ export default function ChatRoom() {
       socket.off('call-ended')
       socket.off('screen-share-started')
       socket.off('screen-share-stopped')
+      socket.off('connect')
       endCall()
       pcRef.current = null
       pendingCandidates.current = []
