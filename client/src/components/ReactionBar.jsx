@@ -22,17 +22,14 @@ export default function ReactionBar({ messageId, reactions = [], onReact }) {
             onReact?.(messageId, emoji)
           }}
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 2,
-            padding: '1px 6px',
-            borderRadius: 8,
-            border: '1px solid #e2e8f0',
-            backgroundColor: '#fff',
-            fontSize: 12,
-            cursor: 'pointer',
-            lineHeight: '20px',
+            display: 'flex', alignItems: 'center', gap: 2,
+            padding: '1px 6px', borderRadius: 6,
+            border: '1px solid #d0d7de', backgroundColor: '#fff',
+            fontSize: 12, cursor: 'pointer', lineHeight: '20px',
+            transition: 'border-color 0.1s',
           }}
+          onMouseEnter={(e) => e.currentTarget.style.borderColor = '#0969da'}
+          onMouseLeave={(e) => e.currentTarget.style.borderColor = '#d0d7de'}
           title={emoji}
         >
           <span>{emoji}</span>
@@ -47,22 +44,19 @@ export default function ReactionBar({ messageId, reactions = [], onReact }) {
           setOpen(!open)
         }}
         style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: 22,
-          height: 22,
-          borderRadius: '50%',
-          border: '1px solid #e2e8f0',
-          backgroundColor: '#fff',
-          fontSize: 14,
-          cursor: 'pointer',
-          color: '#718096',
-          lineHeight: 1,
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          width: 22, height: 22, borderRadius: 6,
+          border: '1px solid #d0d7de', backgroundColor: '#fff',
+          cursor: 'pointer', color: '#656d76', lineHeight: 1,
+          transition: 'border-color 0.1s, background-color 0.1s',
         }}
         title="Add reaction"
+        onMouseEnter={(e) => e.currentTarget.style.borderColor = '#0969da'}
+        onMouseLeave={(e) => e.currentTarget.style.borderColor = '#d0d7de'}
       >
-        +
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-3a.75.75 0 0 1 .75.75v1.5h1.5a.75.75 0 0 1 0 1.5h-1.5v1.5a.75.75 0 0 1-1.5 0v-1.5h-1.5a.75.75 0 0 1 0-1.5h1.5v-1.5A.75.75 0 0 1 8 5Z"/>
+        </svg>
       </button>
       {open && (
         <div
@@ -74,8 +68,8 @@ export default function ReactionBar({ messageId, reactions = [], onReact }) {
             gap: 2,
             padding: '4px 8px',
             backgroundColor: '#fff',
-            border: '1px solid #e2e8f0',
-            borderRadius: 20,
+            border: '1px solid #d0d7de',
+            borderRadius: 8,
             boxShadow: '0 4px 12px rgba(0,0,0,0.12)',
             zIndex: 10,
           }}

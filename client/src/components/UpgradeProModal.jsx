@@ -39,67 +39,58 @@ export default function UpgradeProModal({ onClose }) {
     }
   }
 
+  const overlay = {
+    position: 'fixed', inset: 0,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    zIndex: 1000,
+  }
+
+  const modal = {
+    backgroundColor: '#fff', borderRadius: 12,
+    padding: 32, maxWidth: 480, width: '100%', margin: 20,
+    boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
+  }
+
+  const planCard = (highlight) => ({
+    flex: 1, padding: 16,
+    borderRadius: 8,
+    border: highlight ? '2px solid #0969da' : '1px solid #d0d7de',
+    backgroundColor: highlight ? '#ddf4ff' : '#f6f8fa',
+    position: 'relative',
+  })
+
+  const ulStyle = {
+    listStyle: 'none', padding: 0, margin: 0,
+    fontSize: 12, color: '#24292f', lineHeight: 1.8,
+  }
+
+  const btnPri = {
+    width: '100%', padding: '12px', borderRadius: 8,
+    border: 'none', backgroundColor: '#0969da', color: '#fff',
+    fontSize: 14, fontWeight: 600, cursor: 'pointer',
+    marginBottom: 8, transition: 'background-color 0.15s',
+  }
+
   if (currentPlan === 'pro') {
     return (
-      <div
-        style={{
-          position: 'fixed',
-          inset: 0,
-          backgroundColor: 'rgba(0,0,0,0.4)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000,
-        }}
-        onClick={(e) => e.target === e.currentTarget && onClose()}
-      >
-        <div
-          style={{
-            backgroundColor: '#fff',
-            borderRadius: 16,
-            padding: 40,
-            maxWidth: 440,
-            width: '100%',
-            margin: 20,
-            textAlign: 'center',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
-          }}
-        >
-          <div
-            style={{
-              width: 64,
-              height: 64,
-              borderRadius: '50%',
-              backgroundColor: '#48bb78',
-              color: '#fff',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 32,
-              margin: '0 auto 16px',
-            }}
-          >
-            ✓
+      <div style={overlay} onClick={(e) => e.target === e.currentTarget && onClose()}>
+        <div style={{ ...modal, textAlign: 'center', maxWidth: 400 }}>
+          <div style={{
+            width: 56, height: 56, borderRadius: '50%',
+            backgroundColor: '#dafbe1', color: '#1a7f37',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            margin: '0 auto 12px',
+          }}>
+            <svg width="24" height="24" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/>
+            </svg>
           </div>
-          <h2 style={{ margin: '0 0 8px', color: '#276749', fontSize: 22 }}>
-            You're on Pro!
-          </h2>
-          <p style={{ margin: '0 0 24px', color: '#718096', fontSize: 14 }}>
+          <h2 style={{ margin: '0 0 6px', color: '#0d1117', fontSize: 20 }}>You're on Pro!</h2>
+          <p style={{ margin: '0 0 20px', color: '#656d76', fontSize: 13, lineHeight: 1.5 }}>
             You have access to all features including AI assistant, semantic search, and unlimited everything.
           </p>
-          <button
-            onClick={onClose}
-            style={{
-              padding: '12px 32px',
-              borderRadius: 8,
-              border: 'none',
-              backgroundColor: '#3182ce',
-              color: '#fff',
-              fontSize: 14,
-              fontWeight: 600,
-              cursor: 'pointer',
-            }}
-          >
+          <button onClick={onClose} style={btnPri}>
             Close
           </button>
         </div>
@@ -108,128 +99,67 @@ export default function UpgradeProModal({ onClose }) {
   }
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        backgroundColor: 'rgba(0,0,0,0.4)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 1000,
-      }}
-      onClick={(e) => e.target === e.currentTarget && onClose()}
-    >
-      <div
-        style={{
-          backgroundColor: '#fff',
-          borderRadius: 16,
-          padding: 40,
-          maxWidth: 480,
-          width: '100%',
-          margin: 20,
-          boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
-        }}
-      >
-        <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <div
-            style={{
-              width: 64,
-              height: 64,
-              borderRadius: '50%',
-              backgroundColor: '#fefcbf',
-              color: '#d69e2e',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 32,
-              margin: '0 auto 16px',
-            }}
-          >
-            ★
+    <div style={overlay} onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div style={modal}>
+        <div style={{ textAlign: 'center', marginBottom: 24 }}>
+          <div style={{
+            width: 56, height: 56, borderRadius: '50%',
+            backgroundColor: '#fff1e5', color: '#b35900',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            margin: '0 auto 12px',
+          }}>
+            <svg width="24" height="24" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Zm0 2.445L6.615 5.5a.75.75 0 0 1-.564.41l-3.097.45 2.24 2.184a.75.75 0 0 1 .216.664l-.528 3.084 2.769-1.456a.75.75 0 0 1 .698 0l2.77 1.456-.53-3.084a.75.75 0 0 1 .216-.664l2.24-2.183-3.096-.45a.75.75 0 0 1-.564-.41L8 2.445Z"/>
+            </svg>
           </div>
-          <h2 style={{ margin: '0 0 4px', color: '#1a202c', fontSize: 24 }}>
-            Upgrade to Pro
-          </h2>
-          <p style={{ margin: 0, color: '#718096', fontSize: 14 }}>
-            Unlock the full power of TeamCollab
-          </p>
+          <h2 style={{ margin: '0 0 2px', color: '#0d1117', fontSize: 20 }}>Upgrade to Pro</h2>
+          <p style={{ margin: 0, color: '#656d76', fontSize: 13 }}>Unlock the full power of TeamCollab</p>
         </div>
 
-        <div style={{ display: 'flex', gap: 16, marginBottom: 32 }}>
-          <div
-            style={{
-              flex: 1,
-              padding: 20,
-              borderRadius: 10,
-              border: '2px solid #e2e8f0',
-              backgroundColor: '#f7fafc',
-            }}
-          >
-            <h3 style={{ margin: '0 0 12px', color: '#2d3748', fontSize: 16 }}>Free</h3>
-            <div style={{ fontSize: 28, fontWeight: 700, color: '#1a202c', marginBottom: 12 }}>
-              $0
+        <div style={{ display: 'flex', gap: 12, marginBottom: 24 }}>
+          <div style={planCard(false)}>
+            <h3 style={{ margin: '0 0 8px', color: '#24292f', fontSize: 14 }}>Free</h3>
+            <div style={{ fontSize: 24, fontWeight: 700, color: '#0d1117', marginBottom: 8 }}>
+              $0<span style={{ fontSize: 12, fontWeight: 400, color: '#656d76' }}>/mo</span>
             </div>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: 13, color: '#4a5568', lineHeight: 2 }}>
-              <li>✓ Basic messaging</li>
-              <li>✓ 50 AI queries/month</li>
-              <li>✓ File sharing (5MB)</li>
-              <li>✓ Up to 10 channels</li>
-              <li>✗ Semantic search</li>
-              <li>✗ Unlimited AI</li>
+            <ul style={ulStyle}>
+              <li><FeatureIcon ok /> Basic messaging</li>
+              <li><FeatureIcon ok /> 50 AI queries/month</li>
+              <li><FeatureIcon ok /> File sharing (5MB)</li>
+              <li><FeatureIcon ok /> Up to 10 channels</li>
+              <li><FeatureIcon fail /> Semantic search</li>
+              <li><FeatureIcon fail /> Unlimited AI</li>
             </ul>
           </div>
-          <div
-            style={{
-              flex: 1,
-              padding: 20,
-              borderRadius: 10,
-              border: '2px solid #3182ce',
-              backgroundColor: '#ebf8ff',
-              position: 'relative',
-            }}
-          >
-            <div
-              style={{
-                position: 'absolute',
-                top: -10,
-                left: '50%',
-                transform: 'translateX(-50%)',
-                backgroundColor: '#3182ce',
-                color: '#fff',
-                fontSize: 11,
-                fontWeight: 700,
-                padding: '2px 12px',
-                borderRadius: 10,
-              }}
-            >
+          <div style={planCard(true)}>
+            <div style={{
+              position: 'absolute', top: -8, left: '50%', transform: 'translateX(-50%)',
+              backgroundColor: '#0969da', color: '#fff',
+              fontSize: 10, fontWeight: 700, padding: '2px 10px', borderRadius: 6,
+            }}>
               POPULAR
             </div>
-            <h3 style={{ margin: '0 0 12px', color: '#2b6cb0', fontSize: 16 }}>Pro</h3>
-            <div style={{ fontSize: 28, fontWeight: 700, color: '#1a202c', marginBottom: 12 }}>
-              $9.99
-              <span style={{ fontSize: 14, fontWeight: 400, color: '#718096' }}>/mo</span>
+            <h3 style={{ margin: '0 0 8px', color: '#0969da', fontSize: 14 }}>Pro</h3>
+            <div style={{ fontSize: 24, fontWeight: 700, color: '#0d1117', marginBottom: 8 }}>
+              $9.99<span style={{ fontSize: 12, fontWeight: 400, color: '#656d76' }}>/mo</span>
             </div>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: 13, color: '#4a5568', lineHeight: 2 }}>
-              <li>✓ Everything in Free</li>
-              <li>✓ Unlimited AI queries</li>
-              <li>✓ Semantic search</li>
-              <li>✓ File sharing (50MB)</li>
-              <li>✓ Unlimited channels</li>
-              <li>✓ Priority support</li>
+            <ul style={ulStyle}>
+              <li><FeatureIcon ok /> Everything in Free</li>
+              <li><FeatureIcon ok /> Unlimited AI queries</li>
+              <li><FeatureIcon ok /> Semantic search</li>
+              <li><FeatureIcon ok /> File sharing (50MB)</li>
+              <li><FeatureIcon ok /> Unlimited channels</li>
+              <li><FeatureIcon ok /> Priority support</li>
             </ul>
           </div>
         </div>
 
         {message && (
-          <p
-            style={{
-              textAlign: 'center',
-              fontSize: 13,
-              color: message.includes('Upgraded') ? '#48bb78' : '#e53e3e',
-              marginBottom: 12,
-            }}
-          >
+          <p style={{
+            textAlign: 'center', fontSize: 12,
+            color: message.includes('Upgraded') ? '#1a7f37' : '#cf222e',
+            marginBottom: 12,
+          }}>
             {message}
           </p>
         )}
@@ -238,17 +168,12 @@ export default function UpgradeProModal({ onClose }) {
           onClick={handleUpgrade}
           disabled={loading}
           style={{
-            width: '100%',
-            padding: '14px',
-            borderRadius: 10,
-            border: 'none',
-            backgroundColor: loading ? '#cbd5e0' : '#3182ce',
-            color: '#fff',
-            fontSize: 16,
-            fontWeight: 700,
+            ...btnPri,
+            backgroundColor: loading ? '#d0d7de' : '#0969da',
             cursor: loading ? 'not-allowed' : 'pointer',
-            marginBottom: 8,
           }}
+          onMouseEnter={(e) => { if (!loading) e.currentTarget.style.backgroundColor = '#0550ae' }}
+          onMouseLeave={(e) => { if (!loading) e.currentTarget.style.backgroundColor = '#0969da' }}
         >
           {loading ? 'Processing...' : 'Subscribe to Pro — $9.99/mo'}
         </button>
@@ -257,15 +182,14 @@ export default function UpgradeProModal({ onClose }) {
           onClick={handleDemoUpgrade}
           disabled={demoLoading}
           style={{
-            width: '100%',
-            padding: '10px',
-            borderRadius: 8,
-            border: '1px solid #e2e8f0',
-            backgroundColor: '#fff',
-            color: '#4a5568',
-            fontSize: 13,
+            width: '100%', padding: '10px', borderRadius: 8,
+            border: '1px solid #d0d7de', backgroundColor: '#fff',
+            color: '#24292f', fontSize: 13,
             cursor: demoLoading ? 'not-allowed' : 'pointer',
+            transition: 'border-color 0.15s',
           }}
+          onMouseEnter={(e) => e.currentTarget.style.borderColor = '#0969da'}
+          onMouseLeave={(e) => e.currentTarget.style.borderColor = '#d0d7de'}
         >
           {demoLoading ? 'Upgrading...' : 'Try Pro for Free (Demo Mode)'}
         </button>
@@ -273,18 +197,26 @@ export default function UpgradeProModal({ onClose }) {
         <button
           onClick={onClose}
           style={{
-            display: 'block',
-            margin: '12px auto 0',
-            border: 'none',
-            backgroundColor: 'transparent',
-            color: '#a0aec0',
-            fontSize: 13,
-            cursor: 'pointer',
+            display: 'block', margin: '10px auto 0',
+            border: 'none', backgroundColor: 'transparent',
+            color: '#8b949e', fontSize: 12, cursor: 'pointer',
           }}
         >
           Maybe later
         </button>
       </div>
     </div>
+  )
+}
+
+function FeatureIcon({ ok }) {
+  return (
+    <svg width="12" height="12" viewBox="0 0 16 16" fill={ok ? '#1a7f37' : '#8b949e'} style={{ marginRight: 6, verticalAlign: 'middle' }}>
+      {ok ? (
+        <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/>
+      ) : (
+        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708Z"/>
+      )}
+    </svg>
   )
 }

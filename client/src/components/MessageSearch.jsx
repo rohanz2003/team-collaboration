@@ -41,12 +41,15 @@ export default function MessageSearch({
   return (
     <div
       style={{
-        padding: '12px 16px',
-        borderBottom: '1px solid #e2e8f0',
-        backgroundColor: '#f7fafc',
+        padding: '10px 16px',
+        borderBottom: '1px solid #d0d7de',
+        backgroundColor: '#f6f8fa',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="#656d76" style={{ flexShrink: 0 }}>
+          <path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.5 4.5 0 1 0-9 0 4.5 4.5 0 0 0 9 0Z"/>
+        </svg>
         <input
           type="text"
           value={query}
@@ -56,34 +59,36 @@ export default function MessageSearch({
           autoFocus
           style={{
             flex: 1,
-            padding: '8px 12px',
-            border: '1px solid #cbd5e0',
+            padding: '6px 10px',
+            border: '1px solid #d0d7de',
             borderRadius: 6,
             fontSize: 13,
             outline: 'none',
             fontFamily: 'inherit',
+            backgroundColor: '#fff',
+            color: '#0d1117',
           }}
         />
         <button
           onClick={onClose}
           style={{
-            border: 'none',
-            backgroundColor: 'transparent',
-            cursor: 'pointer',
-            fontSize: 18,
-            color: '#a0aec0',
-            padding: '0 4px',
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            border: '1px solid #d0d7de', backgroundColor: '#fff',
+            cursor: 'pointer', padding: '4px 8px', borderRadius: 6,
+            color: '#656d76', lineHeight: 1,
           }}
           title="Close search"
         >
-          ✕
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708Z"/>
+          </svg>
         </button>
       </div>
       {loading && (
-        <div style={{ fontSize: 12, color: '#a0aec0' }}>Searching...</div>
+        <div style={{ fontSize: 12, color: '#8b949e', padding: '4px 0' }}>Searching...</div>
       )}
       {!loading && searched && results.length === 0 && (
-        <div style={{ fontSize: 12, color: '#a0aec0' }}>
+        <div style={{ fontSize: 12, color: '#8b949e', padding: '4px 0' }}>
           No messages found for "{query}"
         </div>
       )}
@@ -111,21 +116,23 @@ export default function MessageSearch({
                 gap: 2,
                 padding: '6px 10px',
                 borderRadius: 6,
-                border: 'none',
+                border: '1px solid #d0d7de',
                 backgroundColor: '#fff',
                 cursor: 'pointer',
                 textAlign: 'left',
                 fontSize: 12,
                 width: '100%',
-                boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+                transition: 'border-color 0.1s',
               }}
+              onMouseEnter={(e) => e.currentTarget.style.borderColor = '#0969da'}
+              onMouseLeave={(e) => e.currentTarget.style.borderColor = '#d0d7de'}
             >
-              <span style={{ fontWeight: 600, color: '#2d3748', fontSize: 11 }}>
+              <span style={{ fontWeight: 600, color: '#0d1117', fontSize: 11 }}>
                 {msg.sender?.name || 'Unknown'}
               </span>
               <span
                 style={{
-                  color: '#4a5568',
+                  color: '#24292f',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
@@ -134,7 +141,7 @@ export default function MessageSearch({
               >
                 {msg.text || (msg.messageType === 'file' ? msg.fileName : '')}
               </span>
-              <span style={{ fontSize: 10, color: '#a0aec0' }}>
+              <span style={{ fontSize: 10, color: '#8b949e' }}>
                 {new Date(msg.createdAt).toLocaleString()}
               </span>
             </button>

@@ -35,29 +35,29 @@ export default function VideoCall({ onEndCall, onStartScreenShare, onStopScreenS
 
   const isVideo = callType === 'video'
 
+  const badge = (text, bg) => ({
+    position: 'absolute', top: 8, left: 8, zIndex: 10,
+    padding: '3px 8px', borderRadius: 4,
+    backgroundColor: bg, color: '#fff',
+    fontSize: 10, fontWeight: 600,
+  })
+
   return (
     <div
       style={{
-        position: 'fixed',
-        bottom: 80,
-        right: 32,
+        position: 'fixed', bottom: 80, right: 32,
         width: 360,
-        backgroundColor: '#1a202c',
-        borderRadius: 16,
+        backgroundColor: '#0d1117',
+        borderRadius: 12,
         overflow: 'hidden',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
         zIndex: 1500,
+        border: '1px solid #21262d',
       }}
     >
       <div style={{ position: 'relative', backgroundColor: '#000', height: 240 }}>
         {remoteScreenSharing && (
-          <div
-            style={{
-              position: 'absolute', top: 8, left: 8, zIndex: 10,
-              padding: '4px 10px', borderRadius: 4, backgroundColor: '#48bb78',
-              color: '#fff', fontSize: 11, fontWeight: 600,
-            }}
-          >
+          <div style={badge('Screen shared', '#1a7f37')}>
             Screen shared
           </div>
         )}
@@ -76,7 +76,7 @@ export default function VideoCall({ onEndCall, onStartScreenShare, onStopScreenS
             style={{
               width: '100%', height: '100%',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: '#718096', fontSize: 14,
+              color: '#8b949e', fontSize: 13,
             }}
           >
             {isVideo ? 'Waiting for video...' : 'Audio call'}
@@ -90,30 +90,27 @@ export default function VideoCall({ onEndCall, onStartScreenShare, onStopScreenS
             muted
             style={{
               position: 'absolute', bottom: 8, right: 8,
-              width: 120, height: 90, borderRadius: 8,
-              objectFit: 'cover', backgroundColor: '#2d3748',
+              width: 120, height: 90, borderRadius: 6,
+              objectFit: 'cover', backgroundColor: '#21262d',
               transform: isScreenSharing ? 'none' : 'scaleX(-1)',
+              border: '2px solid #30363d',
             }}
           />
         )}
         {isScreenSharing && (
-          <div
-            style={{
-              position: 'absolute', top: 32, left: 8, zIndex: 10,
-              padding: '4px 10px', borderRadius: 4, backgroundColor: '#3182ce',
-              color: '#fff', fontSize: 11, fontWeight: 600,
-            }}
-          >
+          <div style={badge('You are sharing screen', '#0969da')}>
             You are sharing screen
           </div>
         )}
       </div>
-      <div style={{ display: 'flex', gap: 8, justifyContent: 'center', padding: '12px 0' }}>
-        <CallControls onEndCall={onEndCall} />
-        <ScreenShareButton
-          onStartScreenShare={onStartScreenShare}
-          onStopScreenShare={onStopScreenShare}
-        />
+      <div style={{ backgroundColor: '#161b22', borderTop: '1px solid #21262d' }}>
+        <div style={{ display: 'flex', gap: 8, justifyContent: 'center', padding: '8px 0' }}>
+          <CallControls onEndCall={onEndCall} />
+          <ScreenShareButton
+            onStartScreenShare={onStartScreenShare}
+            onStopScreenShare={onStopScreenShare}
+          />
+        </div>
       </div>
     </div>
   )

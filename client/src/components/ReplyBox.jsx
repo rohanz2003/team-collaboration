@@ -1,10 +1,6 @@
 import { useState } from 'react'
 
-export default function ReplyBox({
-  replyToData,
-  onCancelReply,
-  onSendReply,
-}) {
+export default function ReplyBox({ replyToData, onCancelReply, onSendReply }) {
   const [text, setText] = useState('')
 
   if (!replyToData) return null
@@ -25,33 +21,27 @@ export default function ReplyBox({
   return (
     <div
       style={{
-        padding: '8px 32px',
-        borderTop: '1px solid #e2e8f0',
-        backgroundColor: '#f7fafc',
+        padding: '8px 24px',
+        borderTop: '1px solid #d0d7de',
+        backgroundColor: '#f6f8fa',
       }}
     >
       <div
         style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 8,
-          marginBottom: 6,
-          fontSize: 12,
-          color: '#4a5568',
+          display: 'flex', alignItems: 'center', gap: 6,
+          marginBottom: 6, fontSize: 12, color: '#24292f',
         }}
       >
-        <span style={{ color: '#3182ce' }}>↩</span>
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="#0969da">
+          <path d="M1.75 2.5a.75.75 0 0 0-.75.75v6.5c0 .414.336.75.75.75h8a.75.75 0 0 0 .75-.75.75.75 0 0 1 1.5 0v.5A2.25 2.25 0 0 1 9.75 12h-8A2.25 2.25 0 0 1 1.5 9.75v-6.5A2.25 2.25 0 0 1 3.75 1h1.5a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 0-.75.75v3.5h8.5v-.5a.75.75 0 0 1 1.5 0v.5h1.25a.75.75 0 0 1 .705 1.064l-2 4.5a.75.75 0 0 1-1.34-.033l-.026-.054-.104-.25H5.75a.75.75 0 0 1 0-1.5h1.965l.277-.623H3.75a.75.75 0 0 1-.75-.75V3.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5H3.75v2.5h8.5v-.5a.75.75 0 0 1 1.5 0v1.25a.75.75 0 0 1-.75.75h-1.25l-.75 1.5H9.75a.75.75 0 0 1-.75-.75v-1.5a.75.75 0 0 1 .75-.75h1.5v-2.5H1.75Z"/>
+        </svg>
         <span>
-          Replying to{' '}
-          <strong>{replyToData.sender?.name || 'Unknown'}</strong>
+          Replying to <strong>{replyToData.sender?.name || 'Unknown'}</strong>
         </span>
         <span
           style={{
-            flex: 1,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            color: '#a0aec0',
+            flex: 1, overflow: 'hidden', textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap', color: '#8b949e',
           }}
         >
           {replyToData.deleted
@@ -61,17 +51,16 @@ export default function ReplyBox({
         <button
           onClick={onCancelReply}
           style={{
-            border: 'none',
-            backgroundColor: 'transparent',
-            cursor: 'pointer',
-            fontSize: 16,
-            color: '#a0aec0',
-            padding: 0,
-            lineHeight: 1,
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            border: '1px solid #d0d7de', backgroundColor: '#fff',
+            cursor: 'pointer', padding: '2px 5px', borderRadius: 4,
+            color: '#656d76', lineHeight: 1, flexShrink: 0,
           }}
           title="Cancel reply"
         >
-          ✕
+          <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708Z"/>
+          </svg>
         </button>
       </div>
       <div style={{ display: 'flex', gap: 8 }}>
@@ -79,33 +68,40 @@ export default function ReplyBox({
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Write a reply..."
+          placeholder="Type your reply..."
           rows={1}
           style={{
             flex: 1,
-            padding: '8px 12px',
-            border: '1px solid #cbd5e0',
+            padding: '6px 10px',
+            border: '1px solid #d0d7de',
             borderRadius: 6,
             fontSize: 13,
             resize: 'none',
             outline: 'none',
             fontFamily: 'inherit',
+            backgroundColor: '#fff',
+            color: '#0d1117',
+          }}
+          onInput={(e) => {
+            e.target.style.height = 'auto'
+            e.target.style.height = Math.min(e.target.scrollHeight, 80) + 'px'
           }}
         />
         <button
           onClick={handleSend}
           disabled={!text.trim()}
           style={{
-            padding: '8px 16px',
-            borderRadius: 6,
-            border: 'none',
-            backgroundColor: text.trim() ? '#3182ce' : '#cbd5e0',
-            color: '#fff',
-            fontSize: 13,
-            fontWeight: 600,
+            display: 'inline-flex', alignItems: 'center', gap: 4,
+            padding: '6px 14px', borderRadius: 6, border: 'none',
+            backgroundColor: text.trim() ? '#0969da' : '#d0d7de',
+            color: '#fff', fontSize: 12, fontWeight: 600,
             cursor: text.trim() ? 'pointer' : 'not-allowed',
+            alignSelf: 'flex-end',
           }}
         >
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M1.5 1.75v12.5a.75.75 0 0 0 1.03.69l12.5-6.25a.75.75 0 0 0 0-1.38L2.53 1.06A.75.75 0 0 0 1.5 1.75Z"/>
+          </svg>
           Reply
         </button>
       </div>

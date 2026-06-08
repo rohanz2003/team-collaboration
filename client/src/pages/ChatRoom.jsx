@@ -534,26 +534,62 @@ export default function ChatRoom() {
   const onlineCount = onlineUsers.length
   const otherOnline = onlineUsers.filter((u) => u.userId !== user._id)
 
+  const btnSec = {
+    display: 'inline-flex', alignItems: 'center', gap: 5,
+    padding: '6px 12px', borderRadius: 6,
+    border: '1px solid #d0d7de', backgroundColor: '#fff',
+    color: '#24292f', fontSize: 12, fontWeight: 500,
+    cursor: 'pointer', transition: 'border-color 0.15s, background-color 0.15s',
+  }
+
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', backgroundColor: '#fff', position: 'relative' }}>
-      <div style={{ padding: '16px 32px', borderBottom: '1px solid #e2e8f0', backgroundColor: '#fff' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ color: '#a0aec0', fontSize: 20 }}>#</span>
-          <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: '#1a202c' }}>
+      <div style={{ padding: '12px 24px', borderBottom: '1px solid #d0d7de', backgroundColor: '#fff' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{
+            width: 28, height: 28, borderRadius: 6,
+            backgroundColor: '#f6f8fa', border: '1px solid #d0d7de',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: '#656d76', flexShrink: 0,
+          }}>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M2.5 7.5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5Zm0 3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5Zm0-6a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5Z"/>
+            </svg>
+          </div>
+          <h2 style={{ margin: 0, fontSize: 15, fontWeight: 600, color: '#0d1117' }}>
             {channel.name}
           </h2>
-          <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginLeft: 4 }}>
+            {otherOnline.slice(0, 3).map((u) => (
+              <div key={u.userId} title={u.name} style={{
+                width: 22, height: 22, borderRadius: '50%',
+                backgroundColor: '#0969da',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#fff', fontSize: 9, fontWeight: 600,
+                border: '2px solid #fff',
+                marginLeft: -6,
+              }}>
+                {u.name.charAt(0).toUpperCase()}
+              </div>
+            ))}
+          </div>
+          <span style={{ fontSize: 12, color: '#656d76' }}>
+            {onlineCount} online
+          </span>
+
+          <div style={{ marginLeft: 'auto', display: 'flex', gap: 6, alignItems: 'center' }}>
             {plan !== 'pro' && (
               <button
                 onClick={() => setShowUpgradeModal(true)}
                 style={{
-                  padding: '6px 14px', borderRadius: 6, border: 'none',
-                  backgroundColor: '#fefcbf', color: '#d69e2e', fontSize: 13, fontWeight: 600,
-                  cursor: 'pointer',
+                  ...btnSec, backgroundColor: '#f6f8fa', borderColor: '#d0d7de',
+                  color: '#656d76', fontSize: 11,
                 }}
-                title="Upgrade to Pro"
               >
-                ★ Free Plan
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/>
+                </svg>
+                Free
               </button>
             )}
             <SummaryButton
@@ -563,70 +599,50 @@ export default function ChatRoom() {
             <button
               onClick={() => setShowAIPanel(!showAIPanel)}
               style={{
-                padding: '6px 14px', borderRadius: 6, border: '1px solid #e2e8f0',
-                backgroundColor: showAIPanel ? '#ebf8ff' : '#fff',
-                color: showAIPanel ? '#2b6cb0' : '#4a5568',
-                fontSize: 13, fontWeight: 500, cursor: 'pointer',
+                ...btnSec,
+                backgroundColor: showAIPanel ? '#ddf4ff' : '#fff',
+                borderColor: showAIPanel ? '#0969da' : '#d0d7de',
+                color: showAIPanel ? '#0969da' : '#24292f',
               }}
-              title="AI Assistant"
             >
-              {showAIPanel ? 'Close AI' : 'AI Chat'}
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 0a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Zm0 2.445L6.615 5.5a.75.75 0 0 1-.564.41l-3.097.45 2.24 2.184a.75.75 0 0 1 .216.664l-.528 3.084 2.769-1.456a.75.75 0 0 1 .698 0l2.77 1.456-.53-3.084a.75.75 0 0 1 .216-.664l2.24-2.183-3.096-.45a.75.75 0 0 1-.564-.41L8 2.445Z"/>
+              </svg>
+              AI
             </button>
             <button
               onClick={() => setShowSearch(!showSearch)}
-              style={{
-                padding: '6px 14px', borderRadius: 6, border: '1px solid #e2e8f0',
-                backgroundColor: '#fff', color: '#4a5568', fontSize: 13, fontWeight: 500,
-                cursor: 'pointer',
-              }}
-              title="Search messages"
+              style={btnSec}
             >
-              {showSearch ? 'Close Search' : 'Search'}
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.5 4.5 0 1 0-9 0 4.5 4.5 0 0 0 9 0Z"/>
+              </svg>
+              Search
             </button>
             {otherOnline.length > 0 && !inCall && (
               <>
                 <button
                   onClick={() => startCall(true)}
-                  style={{
-                    padding: '6px 14px', borderRadius: 6, border: '1px solid #e2e8f0',
-                    backgroundColor: '#fff', color: '#4a5568', fontSize: 13, fontWeight: 500,
-                    cursor: 'pointer',
-                  }}
-                  title="Start video call"
+                  style={btnSec}
+                  title="Video call"
                 >
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M1 3.25C1 1.784 2.784 0 4.25 0h7.5C13.216 0 15 1.784 15 3.25v9.5c0 1.466-1.784 2.75-3.25 2.75h-7.5C2.784 15.5 1 13.716 1 12.25Zm12.5 0c0-.69-.56-1.25-1.25-1.25h-7.5c-.69 0-1.25.56-1.25 1.25v9.5c0 .69.56 1.25 1.25 1.25h7.5c.69 0 1.25-.56 1.25-1.25Zm-1.873 3.56 2.25-1.5a.75.75 0 0 1 1.123.65v4.08a.75.75 0 0 1-1.123.65l-2.25-1.5a.75.75 0 0 1-.376-.65v-1.08a.75.75 0 0 1 .376-.65Z"/>
+                  </svg>
                   Video
                 </button>
                 <button
                   onClick={() => startCall(false)}
-                  style={{
-                    padding: '6px 14px', borderRadius: 6, border: '1px solid #e2e8f0',
-                    backgroundColor: '#fff', color: '#4a5568', fontSize: 13, fontWeight: 500,
-                    cursor: 'pointer',
-                  }}
-                  title="Start audio call"
+                  style={btnSec}
+                  title="Audio call"
                 >
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M3.326 2.484a.75.75 0 0 1 1.033.248c.382.599.946 1.394 1.711 2.324a.75.75 0 0 1-1.184.92c-.724-.88-1.248-1.614-1.606-2.16a.75.75 0 0 1 .246-1.032ZM12.674 2.484a.75.75 0 0 1 .246 1.032c-.358.546-.882 1.28-1.606 2.16a.75.75 0 1 1-1.184-.92c.765-.93 1.329-1.726 1.711-2.324a.75.75 0 0 1 1.033-.248ZM8 4a3 3 0 0 0-3 3v2a3 3 0 1 0 6 0V7a3 3 0 0 0-3-3Zm-4.5 3a4.5 4.5 0 1 1 9 0v2a4.5 4.5 0 0 1-9 0Z"/>
+                  </svg>
                   Audio
                 </button>
               </>
             )}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-              {otherOnline.slice(0, 5).map((u) => (
-                <span key={u.userId} title={u.name} style={{
-                  width: 24, height: 24, borderRadius: '50%',
-                  backgroundColor: '#3182ce', color: '#fff',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 11, fontWeight: 600,
-                }}>
-                  {u.name.charAt(0).toUpperCase()}
-                </span>
-              ))}
-              {otherOnline.length > 5 && (
-                <span style={{ fontSize: 11, color: '#718096' }}>+{otherOnline.length - 5}</span>
-              )}
-            </div>
-            <span style={{ fontSize: 12, color: '#718096' }}>
-              {onlineCount} online
-            </span>
           </div>
         </div>
       </div>
@@ -655,7 +671,7 @@ export default function ChatRoom() {
           />
 
           {typingNames && (
-            <div style={{ padding: '4px 32px', fontSize: 12, color: '#718096', fontStyle: 'italic' }}>
+            <div style={{ padding: '4px 24px', fontSize: 12, color: '#656d76', fontStyle: 'italic' }}>
               {typingNames} typing...
             </div>
           )}

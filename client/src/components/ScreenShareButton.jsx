@@ -16,23 +16,21 @@ function ScreenShareButton({ onStartScreenShare, onStopScreenShare }) {
     <button
       onClick={handleClick}
       style={{
-        width: 52,
-        height: 52,
-        borderRadius: '50%',
+        width: 48, height: 48, borderRadius: '50%',
         border: 'none',
-        backgroundColor: isScreenSharing ? '#48bb78' : '#2d3748',
+        backgroundColor: isScreenSharing ? '#1a7f37' : '#21262d',
         color: '#fff',
-        fontSize: 12,
-        fontWeight: 700,
         cursor: 'pointer',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        lineHeight: 1.2,
+        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+        transition: 'background-color 0.15s',
       }}
+      onMouseEnter={(e) => { if (!isScreenSharing) e.currentTarget.style.backgroundColor = '#30363d' }}
+      onMouseLeave={(e) => { if (!isScreenSharing) e.currentTarget.style.backgroundColor = '#21262d' }}
       title={isScreenSharing ? 'Stop sharing screen' : 'Share screen'}
     >
-      {isScreenSharing ? 'STOP' : 'SC'}
+      <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M0 2.75C0 1.784.784 1 1.75 1h12.5c.966 0 1.75.784 1.75 1.75v7.5A1.75 1.75 0 0 1 14.25 12H9.06l.22 1.5h2.22a.75.75 0 0 1 0 1.5H4.5a.75.75 0 0 1 0-1.5h2.22l.22-1.5H1.75A1.75 1.75 0 0 1 0 10.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25ZM7.72 12l-.22 1.5h1l-.22-1.5Z"/>
+      </svg>
     </button>
   )
 }
