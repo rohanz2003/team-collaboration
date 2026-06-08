@@ -1,12 +1,12 @@
 import { memo } from 'react'
 
-function Alert({ type = 'error', message, onClose }) {
+function Alert({ message, onClose, type = 'error' }) {
   if (!message) return null
 
   const colors = {
-    error: { bg: '#fff5f5', border: '#fed7d7', text: '#c53030' },
-    success: { bg: '#f0fff4', border: '#c6f6d5', text: '#276749' },
-    info: { bg: '#ebf8ff', border: '#bee3f8', text: '#2b6cb0' },
+    error: { bg: '#fef2f2', border: '#fecaca', color: '#dc2626' },
+    success: { bg: '#f0fdf4', border: '#bbf7d0', color: '#16a34a' },
+    info: { bg: '#eef2ff', border: '#c7d2fe', color: '#6366f1' },
   }
 
   const c = colors[type] || colors.error
@@ -15,12 +15,13 @@ function Alert({ type = 'error', message, onClose }) {
     <div
       style={{
         padding: '10px 14px',
-        borderRadius: 6,
+        borderRadius: 10,
         backgroundColor: c.bg,
         border: `1px solid ${c.border}`,
-        color: c.text,
+        color: c.color,
+        fontSize: 13,
+        fontWeight: 500,
         marginBottom: 16,
-        fontSize: 14,
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -31,15 +32,17 @@ function Alert({ type = 'error', message, onClose }) {
         <button
           onClick={onClose}
           style={{
-            background: 'none',
             border: 'none',
+            backgroundColor: 'transparent',
             cursor: 'pointer',
-            color: c.text,
-            fontSize: 18,
+            fontSize: 16,
+            color: c.color,
+            padding: 0,
             lineHeight: 1,
+            marginLeft: 8,
           }}
         >
-          &times;
+          ✕
         </button>
       )}
     </div>

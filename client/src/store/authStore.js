@@ -27,6 +27,7 @@ const useAuthStore = create((set, get) => ({
       const { data } = await authApi.login({ email, password })
       persistAuth(data)
       set({ user: data, token: data.token, loading: false })
+      return data
     } catch (err) {
       const message = err.response?.data?.message || 'Login failed'
       set({ error: message, loading: false })
@@ -37,8 +38,10 @@ const useAuthStore = create((set, get) => ({
   register: async (name, email, password) => {
     set({ loading: true, error: null })
     try {
-      await authApi.register({ name, email, password })
-      set({ loading: false })
+      const { data } = await authApi.register({ name, email, password })
+      persistAuth(data)
+      set({ user: data, token: data.token, loading: false })
+      return data
     } catch (err) {
       const message = err.response?.data?.message || 'Registration failed'
       set({ error: message, loading: false })

@@ -30,7 +30,7 @@ export default function Register() {
       if (!validate()) return
       try {
         await register(values.name, values.email, values.password)
-        navigate(ROUTES.LOGIN)
+        navigate(ROUTES.DASHBOARD)
       } catch {
         // error handled in store
       }
