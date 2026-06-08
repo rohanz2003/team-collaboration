@@ -265,6 +265,7 @@ export default function ChatRoom() {
 
   const startCall = useCallback(
     async (withVideo) => {
+      useCallStore.getState().setCallEnded(false)
       const socket = getSocket()
       if (!socket || !channel?._id) return
 
@@ -321,12 +322,12 @@ export default function ChatRoom() {
     pcRef.current = pc
     setPeerConnection(pc)
 
-    targetSocketRef.current = socket.id
+    targetSocketRef.current = incomingCall.fromSocketId
 
     pc.onicecandidate = (e) => {
-      if (e.candidate) {
+      if (e.candidate && targetSocketRef.current) {
         socket.emit('ice-candidate', {
-          targetSocketId: socket.id,
+          targetSocketId: targetSocketRef.current,
           candidate: e.candidate,
         })
       }
@@ -338,7 +339,7 @@ export default function ChatRoom() {
     const answer = await createAnswer(pc)
 
     socket.emit('answer-call', {
-      targetSocketId: socket.id,
+      targetSocketId: targetSocketRef.current,
       answer,
     })
 

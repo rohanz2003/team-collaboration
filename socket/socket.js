@@ -319,6 +319,7 @@ function setupSocket(io) {
       if (target) {
         io.to(target.socketId).emit('incoming-call', {
           from: { userId: user._id.toString(), name: user.name },
+          fromSocketId: socket.id,
           offer,
           callType,
         });

@@ -22,13 +22,6 @@ export async function getLocalStream(video = true, audio = true) {
 export function createPeerConnection(remoteStreamCallback) {
   const pc = new RTCPeerConnection(RTC_CONFIG)
 
-  pc.onicecandidate = (e) => {
-    if (e.candidate) {
-      return e.candidate
-    }
-    return null
-  }
-
   pc.ontrack = (e) => {
     if (e.streams?.[0]) {
       remoteStreamCallback(e.streams[0])
