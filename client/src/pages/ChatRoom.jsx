@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useRef, useState } from 'react'
 import { useCurrentChannel } from '../store/workspaceStore'
-import { useAuth, useUpdateUser } from '../store/authStore'
+import useAuthStore, { useAuth, useUpdateUser } from '../store/authStore'
 import useMessageStore, { useReplyToData } from '../store/messageStore'
 import useSubscriptionStore, { useIsPro, usePlan } from '../store/subscriptionStore'
 import {
@@ -480,7 +480,11 @@ export default function ChatRoom() {
   const handleSend = useCallback(
     (text) => {
       const socket = getSocket()
-      if (!socket || !channel?._id) return
+      if (!socket?.connected || !channel?._id) {
+        const token = useAuthStore.getState().token
+        if (token) connectSocket(token)
+        return
+      }
       socket.emit('send-message', { channelId: channel._id, text })
     },
     [channel?._id]
@@ -489,7 +493,11 @@ export default function ChatRoom() {
   const handleFileSent = useCallback(
     (fileData) => {
       const socket = getSocket()
-      if (!socket || !channel?._id) return
+      if (!socket?.connected || !channel?._id) {
+        const token = useAuthStore.getState().token
+        if (token) connectSocket(token)
+        return
+      }
       socket.emit('send-message', { channelId: channel._id, ...fileData })
     },
     [channel?._id]
@@ -595,6 +603,21 @@ export default function ChatRoom() {
                 </button>
               </>
             )}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              {otherOnline.slice(0, 5).map((u) => (
+                <span key={u.userId} title={u.name} style={{
+                  width: 24, height: 24, borderRadius: '50%',
+                  backgroundColor: '#3182ce', color: '#fff',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 11, fontWeight: 600,
+                }}>
+                  {u.name.charAt(0).toUpperCase()}
+                </span>
+              ))}
+              {otherOnline.length > 5 && (
+                <span style={{ fontSize: 11, color: '#718096' }}>+{otherOnline.length - 5}</span>
+              )}
+            </div>
             <span style={{ fontSize: 12, color: '#718096' }}>
               {onlineCount} online
             </span>
