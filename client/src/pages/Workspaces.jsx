@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, memo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../store/authStore'
-import {
+import useWorkspaceStore, {
   useFetchWorkspaces,
   useWorkspaces,
   useWorkspaceLoading,
@@ -102,8 +102,7 @@ export default function Workspaces() {
 
   const handleSelect = useCallback(
     async (ws) => {
-      const { useSetWorkspace } = await import('../store/workspaceStore')
-      useSetWorkspace.getState().setWorkspace(ws)
+      useWorkspaceStore.getState().setWorkspace(ws)
       navigate(ROUTES.WORKSPACE_VIEW)
     },
     [navigate]

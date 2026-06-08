@@ -1,7 +1,7 @@
 import { useEffect, useCallback, useState, memo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth, useLogout } from '../store/authStore'
-import { useFetchWorkspaces, useWorkspaces, useWorkspaceLoading } from '../store/workspaceStore'
+import useWorkspaceStore, { useFetchWorkspaces, useWorkspaces, useWorkspaceLoading } from '../store/workspaceStore'
 import Button from '../components/ui/Button'
 import { ROUTES } from '../constants/routes'
 
@@ -163,8 +163,7 @@ export default function Dashboard() {
   }, [logout, navigate])
 
   const handleSelect = useCallback(async (ws) => {
-    const { useSetWorkspace } = await import('../store/workspaceStore')
-    useSetWorkspace.getState().setWorkspace(ws)
+    useWorkspaceStore.getState().setWorkspace(ws)
     navigate(ROUTES.WORKSPACE_VIEW)
   }, [navigate])
 
