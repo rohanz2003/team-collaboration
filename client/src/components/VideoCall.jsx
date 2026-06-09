@@ -114,7 +114,7 @@ export default function VideoCall({ onEndCall, onStartScreenShare, onStopScreenS
             }}
           />
         )}
-        <audio ref={remoteAudioRef} autoPlay playsInline />
+        <audio key="remote-audio" ref={remoteAudioRef} autoPlay playsInline></audio>
         {isScreenSharing && (
           <div style={{
             position: 'absolute', top: 8, right: 8,
