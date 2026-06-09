@@ -188,7 +188,7 @@ function Header({ user, onLogout }) {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <NotificationBell />
+          <NotificationBell dark />
           <div style={{ position: 'relative' }}>
           <div
             onClick={() => setMenuOpen(!menuOpen)}
