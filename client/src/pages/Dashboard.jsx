@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth, useLogout } from '../store/authStore'
 import useWorkspaceStore, { useFetchWorkspaces, useWorkspaces, useWorkspaceLoading } from '../store/workspaceStore'
 import { ROUTES } from '../constants/routes'
+import NotificationBell from '../components/NotificationBell'
 
 const linkS = {
   display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 14px',
@@ -186,7 +187,9 @@ function Header({ user, onLogout }) {
           <span style={{ fontSize: 15, fontWeight: 600, color: '#0d1117' }}>TeamCollab</span>
         </div>
 
-        <div style={{ position: 'relative' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <NotificationBell />
+          <div style={{ position: 'relative' }}>
           <div
             onClick={() => setMenuOpen(!menuOpen)}
             style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', padding: '4px 8px', borderRadius: 6 }}
@@ -224,6 +227,7 @@ function Header({ user, onLogout }) {
               </div>
             </div>
           )}
+        </div>
         </div>
       </div>
     </div>
