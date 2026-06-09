@@ -30,7 +30,8 @@ export default function IncomingCall() {
       }}>
         <div style={{
           width: 64, height: 64, borderRadius: '50%',
-          backgroundColor: '#075E54', color: '#fff',
+          background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+          color: '#fff',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: 26, fontWeight: 700, margin: '0 auto 12px',
         }}>
@@ -40,11 +41,11 @@ export default function IncomingCall() {
           {incomingCall.from?.name || 'Someone'}
         </h2>
         <p style={{ margin: '0 0 20px', color: '#667781', fontSize: 13 }}>
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="#667781" style={{ verticalAlign: 'middle', marginRight: 4 }}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 640 512" fill="#667781" style={{ verticalAlign: 'middle', marginRight: 4 }}>
             {isVideo ? (
-              <path d="M1 3.25C1 1.784 2.784 0 4.25 0h7.5C13.216 0 15 1.784 15 3.25v9.5c0 1.466-1.784 2.75-3.25 2.75h-7.5C2.784 15.5 1 13.716 1 12.25Zm12.5 0c0-.69-.56-1.25-1.25-1.25h-7.5c-.69 0-1.25.56-1.25 1.25v9.5c0 .69.56 1.25 1.25 1.25h7.5c.69 0 1.25-.56 1.25-1.25Z"/>
+              <path d="M0 128C0 92.7 28.7 64 64 64l256 0c35.3 0 64 28.7 64 64l0 256c0 35.3-28.7 64-64 64L64 448c-35.3 0-64-28.7-64-64L0 128zM559.1 99.8c10.4 5.6 16.9 16.4 16.9 28.2l0 256c0 11.8-6.5 22.6-16.9 28.2s-23 5-32.8-.7l-96-64L432 343.8l0-175.6 14.2-9.5 96-64c9.8-6.5 22.4-7.2 32.8-.7z"/>
             ) : (
-              <path d="M3.326 2.484a.75.75 0 0 1 1.033.248c.382.599.946 1.394 1.711 2.324a.75.75 0 0 1-1.184.92c-.724-.88-1.248-1.614-1.606-2.16a.75.75 0 0 1 .246-1.032ZM12.674 2.484a.75.75 0 0 1 .246 1.032c-.358.546-.882 1.28-1.606 2.16a.75.75 0 1 1-1.184-.92c.765-.93 1.329-1.726 1.711-2.324a.75.75 0 0 1 1.033-.248ZM8 4a3 3 0 0 0-3 3v2a3 3 0 1 0 6 0V7a3 3 0 0 0-3-3Z"/>
+              <path d="M80 96l0 160c0 53 43 96 96 96s96-43 96-96l0-160c0-53-43-96-96-96S80 43 80 96zM192 320l-48 0 0 96c0 17.7-14.3 32-32 32s-32-14.3-32-32l0-96-16 0c-35.3 0-64-28.7-64-64l0-32c0-17.7 14.3-32 32-32s32 14.3 32 32l0 32c0 8.8 7.2 16 16 16l160 0c8.8 0 16-7.2 16-16l0-32c0-17.7 14.3-32 32-32s32 14.3 32 32l0 32c0 35.3-28.7 64-64 64l-16 0 0 96c0 17.7-14.3 32-32 32s-32-14.3-32-32l0-96z"/>
             )}
           </svg>
           Incoming {incomingCall.callType} call...
@@ -58,21 +59,22 @@ export default function IncomingCall() {
           }}
             onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e9edef'}
             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#f0f2f5'}>
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
-              <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708Z"/>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 384 512" fill="currentColor">
+              <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/>
             </svg>
             Decline
           </button>
           <button onClick={answerCall} style={{
             display: 'inline-flex', alignItems: 'center', gap: 6,
             padding: '10px 24px', borderRadius: 8, border: 'none',
-            backgroundColor: '#25D366', color: '#fff', fontSize: 13, fontWeight: 600,
-            cursor: 'pointer', transition: 'background-color 0.15s',
+            background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+            color: '#fff', fontSize: 13, fontWeight: 600,
+            cursor: 'pointer', transition: 'opacity 0.15s',
           }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#20BD5A'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#25D366'}>
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
-              <path d="M3.326 2.484a.75.75 0 0 1 1.033.248c.382.599.946 1.394 1.711 2.324a.75.75 0 0 1-1.184.92c-.724-.88-1.248-1.614-1.606-2.16a.75.75 0 0 1 .246-1.032ZM12.674 2.484a.75.75 0 0 1 .246 1.032c-.358.546-.882 1.28-1.606 2.16a.75.75 0 1 1-1.184-.92c.765-.93 1.329-1.726 1.711-2.324a.75.75 0 0 1 1.033-.248ZM8 6a3.5 3.5 0 0 0-3.5 3.5v.5h7v-.5A3.5 3.5 0 0 0 8 6Z"/>
+            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 512 512" fill="currentColor">
+              <path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/>
             </svg>
             Accept
           </button>

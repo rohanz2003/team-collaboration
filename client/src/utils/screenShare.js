@@ -29,16 +29,22 @@ export function replaceVideoTrack(pc, newTrack) {
   return false
 }
 
-export function replaceAudioTrack(pc, newTrack) {
+export async function renegotiateVideoTrack(pc, newTrack, originalStream) {
   if (!pc) return false
-  const sender = pc.getSenders().find((s) => s.track?.kind === 'audio')
-  if (sender) {
-    sender.replaceTrack(newTrack)
+  const sender = pc.getSenders().find((s) => s.track?.kind === 'video')
+  if (!sender) return false
+  try {
+    await sender.replaceTrack(newTrack)
     return true
+  } catch {
+    try {
+      pc.removeTrack(sender)
+      pc.addTrack(newTrack, originalStream)
+      const offer = await pc.createOffer()
+      await pc.setLocalDescription(offer)
+      return offer
+    } catch {
+      return false
+    }
   }
-  return false
-}
-
-export function getCameraStream(stream) {
-  return stream?.getVideoTracks().find((t) => t.kind === 'video') || null
 }

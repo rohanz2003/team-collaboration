@@ -392,6 +392,7 @@ function setupSocket(io) {
     socket.on('disconnect', () => {
       onlineUsers.delete(user._id.toString());
       io.emit('online-users', Array.from(onlineUsers.values()));
+      socket.broadcast.emit('call-ended');
     });
   });
 }

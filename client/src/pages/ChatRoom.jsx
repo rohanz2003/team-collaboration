@@ -19,7 +19,7 @@ import {
 } from '../store/chatStore'
 import useCallStore, { useIncomingCall, useInCall, useCallAccepted } from '../store/callStore'
 import { getLocalStream, createPeerConnection, createOffer, createAnswer, setRemoteDescription, addIceCandidate, addLocalTracks } from '../utils/webRTC'
-import { getScreenStream, replaceVideoTrack, stopScreenStream } from '../utils/screenShare'
+import { getScreenStream, renegotiateVideoTrack, stopScreenStream } from '../utils/screenShare'
 import { connectSocket, getSocket } from '../socket'
 import { messageApi } from '../api/message'
 import MessageBox from '../components/MessageBox'
@@ -270,15 +270,81 @@ export default function ChatRoom() {
       const socket = getSocket()
       if (!socket || !channel?._id) return
 
-      const stream = await getLocalStream(withVideo, true)
-      if (!stream) return
-      setLocalStream(stream)
-      setCallType(withVideo ? 'video' : 'audio')
-      setLocalCallType(withVideo ? 'video' : 'audio')
+      try {
+        const stream = await getLocalStream(withVideo, true)
+        setLocalStream(stream)
+        setCallType(withVideo ? 'video' : 'audio')
+        setLocalCallType(withVideo ? 'video' : 'audio')
 
-      const pc = createPeerConnection(handleRemoteStream)
+        const pc = createPeerConnection(handleRemoteStream, (state) => {
+          if (state === 'failed' || state === 'disconnected') {
+            handleEndCall()
+          }
+        })
+        pcRef.current = pc
+        setPeerConnection(pc)
+
+        pc.onicecandidate = (e) => {
+          if (e.candidate && targetSocketRef.current) {
+            socket.emit('ice-candidate', {
+              targetSocketId: targetSocketRef.current,
+              candidate: e.candidate,
+            })
+          }
+        }
+
+        const memberIds = new Set(
+          (workspace?.members || []).map((m) =>
+            typeof m.user === 'object' ? m.user?._id : m.user
+          ).filter(Boolean)
+        )
+        const targetUser = onlineUsers.find((u) =>
+          u.userId !== user._id && memberIds.has(u.userId)
+        )
+        if (!targetUser) {
+          alert('No online members found in this workspace')
+          return
+        }
+
+        targetSocketRef.current = targetUser.socketId
+
+        addLocalTracks(pc, stream)
+        const offer = await createOffer(pc)
+
+        socket.emit('call-user', {
+          targetUserId: targetUser.userId,
+          offer,
+          callType: withVideo ? 'video' : 'audio',
+        })
+
+        setInCall(true)
+      } catch (err) {
+        alert(err.message || 'Failed to start call')
+      }
+    },
+    [channel?._id, workspace?.members, user._id, onlineUsers, handleRemoteStream, setLocalStream, setPeerConnection, setInCall, handleEndCall]
+  )
+
+  const acceptIncomingCall = useCallback(async () => {
+    if (!incomingCall) return
+    const socket = getSocket()
+    if (!socket) return
+
+    try {
+      const stream = await getLocalStream(incomingCall.callType === 'video', true)
+      setLocalStream(stream)
+      setCallType(incomingCall.callType)
+      setLocalCallType(incomingCall.callType)
+
+      const pc = createPeerConnection(handleRemoteStream, (state) => {
+        if (state === 'failed' || state === 'disconnected') {
+          handleEndCall()
+        }
+      })
       pcRef.current = pc
       setPeerConnection(pc)
+
+      targetSocketRef.current = incomingCall.fromSocketId
 
       pc.onicecandidate = (e) => {
         if (e.candidate && targetSocketRef.current) {
@@ -290,68 +356,26 @@ export default function ChatRoom() {
       }
 
       addLocalTracks(pc, stream)
-      const offer = await createOffer(pc)
+      await setRemoteDescription(pc, incomingCall.offer)
 
-      const targetUser = onlineUsers.find((u) => u.userId !== user._id)
-      if (!targetUser) return
+      const answer = await createAnswer(pc)
 
-      targetSocketRef.current = targetUser.socketId
-
-      socket.emit('call-user', {
-        targetUserId: targetUser.userId,
-        offer,
-        callType: withVideo ? 'video' : 'audio',
+      socket.emit('answer-call', {
+        targetSocketId: targetSocketRef.current,
+        answer,
       })
 
-      setInCall(true)
-    },
-    [channel?._id, user._id, onlineUsers, handleRemoteStream, setLocalStream, setPeerConnection, setInCall]
-  )
-
-  const acceptIncomingCall = useCallback(async () => {
-    if (!incomingCall) return
-    const socket = getSocket()
-    if (!socket) return
-
-    const stream = await getLocalStream(incomingCall.callType === 'video', true)
-    if (!stream) return
-    setLocalStream(stream)
-    setCallType(incomingCall.callType)
-    setLocalCallType(incomingCall.callType)
-
-    const pc = createPeerConnection(handleRemoteStream)
-    pcRef.current = pc
-    setPeerConnection(pc)
-
-    targetSocketRef.current = incomingCall.fromSocketId
-
-    pc.onicecandidate = (e) => {
-      if (e.candidate && targetSocketRef.current) {
-        socket.emit('ice-candidate', {
-          targetSocketId: targetSocketRef.current,
-          candidate: e.candidate,
-        })
+      for (const c of pendingCandidates.current) {
+        addIceCandidate(pc, c)
       }
+      pendingCandidates.current = []
+
+      setInCall(true)
+      clearIncomingCall()
+    } catch (err) {
+      alert('Failed to accept call: ' + (err.message || 'Unknown error'))
     }
-
-    addLocalTracks(pc, stream)
-    await setRemoteDescription(pc, incomingCall.offer)
-
-    const answer = await createAnswer(pc)
-
-    socket.emit('answer-call', {
-      targetSocketId: targetSocketRef.current,
-      answer,
-    })
-
-    for (const c of pendingCandidates.current) {
-      addIceCandidate(pc, c)
-    }
-    pendingCandidates.current = []
-
-    setInCall(true)
-    clearIncomingCall()
-  }, [incomingCall, handleRemoteStream, setLocalStream, setPeerConnection, setInCall, clearIncomingCall, setCallType])
+  }, [incomingCall, handleRemoteStream, setLocalStream, setPeerConnection, setInCall, clearIncomingCall, setCallType, handleEndCall])
 
   useEffect(() => {
     if (callAccepted && incomingCall) {
@@ -370,11 +394,18 @@ export default function ChatRoom() {
       const videoTrack = screenStream.getVideoTracks()[0]
       if (!videoTrack) return
 
-      const replaced = replaceVideoTrack(pc, videoTrack)
-      if (!replaced) return
+      const result = await renegotiateVideoTrack(pc, videoTrack, screenStream)
+      if (!result) return
 
       useCallStore.getState().setScreenStream(screenStream)
       useCallStore.getState().startScreenShare()
+
+      if (result && typeof result !== 'boolean') {
+        socket.emit('ice-candidate', {
+          targetSocketId: targetSocketRef.current,
+          candidate: { sdp: result.sdp, type: result.type },
+        })
+      }
 
       socket.emit('screen-share-started', {
         targetSocketId: targetSocketRef.current,
@@ -388,7 +419,7 @@ export default function ChatRoom() {
         console.error('Screen share error:', err.message)
       }
     }
-  }, [])
+  }, [handleStopScreenShare])
 
   const handleStopScreenShare = useCallback(() => {
     const pc = pcRef.current
@@ -398,7 +429,7 @@ export default function ChatRoom() {
     const cameraTrack = localStream?.getVideoTracks()[0]
 
     if (pc && cameraTrack) {
-      replaceVideoTrack(pc, cameraTrack)
+      renegotiateVideoTrack(pc, cameraTrack, localStream).then(() => {})
     }
 
     stopScreenStream(useCallStore.getState().screenStream)
