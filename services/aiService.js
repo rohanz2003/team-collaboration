@@ -26,9 +26,7 @@ Format your response as JSON:
 
 Respond ONLY with valid JSON.`,
 
-  ask: `You are a helpful AI assistant embedded in a team collaboration platform.
-Answer the user's question based on the chat history provided.
-Be concise and specific. If the answer isn't in the chat history, say so.`,
+  ask: `You are a friendly, knowledgeable AI assistant. You can answer ANY question — about the workspace, daily life, world knowledge, or casual conversation. Be warm, conversational, and human-like. When workspace context is provided, use it to answer workspace-specific questions. For everything else, use your general knowledge. Keep responses concise but helpful.`,
 
   generateEmbedding: null,
 };
@@ -114,10 +112,10 @@ async function askAI(question, context) {
       model: MODEL,
       messages: [
         { role: 'system', content: SYSTEM_PROMPTS.ask },
-        { role: 'user', content: `Workspace Context:\n${contextText}\n\nQuestion: ${question}` },
+        { role: 'user', content: `Workspace Context (use if relevant):\n${contextText}\n\nQuestion: ${question}` },
       ],
-      temperature: 0.3,
-      max_tokens: 800,
+      temperature: 0.7,
+      max_tokens: 1024,
     });
 
     return response.choices[0].message.content.trim();
