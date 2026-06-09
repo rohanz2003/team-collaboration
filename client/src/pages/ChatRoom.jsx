@@ -106,6 +106,17 @@ export default function ChatRoom() {
     })
   }, [fetchSubStatus, updateUser])
 
+  const handleEndCall = useCallback(() => {
+    const socket = getSocket()
+    if (socket && targetSocketRef.current) {
+      socket.emit('end-call', { targetSocketId: targetSocketRef.current })
+    }
+    endCall()
+    pcRef.current = null
+    pendingCandidates.current = []
+    targetSocketRef.current = null
+  }, [endCall])
+
   const handleRemoteStream = useCallback(
     (stream) => {
       setRemoteStream(stream)
@@ -440,18 +451,7 @@ export default function ChatRoom() {
         targetSocketId: targetSocketRef.current,
       })
     }
-  }, [])
-
-  const handleEndCall = useCallback(() => {
-    const socket = getSocket()
-    if (socket && targetSocketRef.current) {
-      socket.emit('end-call', { targetSocketId: targetSocketRef.current })
-    }
-    endCall()
-    pcRef.current = null
-    pendingCandidates.current = []
-    targetSocketRef.current = null
-  }, [endCall])
+  }, [handleStopScreenShare])
 
   const handleReact = useCallback((messageId, type) => {
     const socket = getSocket()
