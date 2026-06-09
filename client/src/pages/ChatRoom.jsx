@@ -395,6 +395,27 @@ export default function ChatRoom() {
     }
   }, [callAccepted])
 
+  const handleStopScreenShare = useCallback(() => {
+    const pc = pcRef.current
+    const socket = getSocket()
+
+    const localStream = useCallStore.getState().localStream
+    const cameraTrack = localStream?.getVideoTracks()[0]
+
+    if (pc && cameraTrack) {
+      renegotiateVideoTrack(pc, cameraTrack, localStream).then(() => {})
+    }
+
+    stopScreenStream(useCallStore.getState().screenStream)
+    useCallStore.getState().stopScreenShare()
+
+    if (socket && targetSocketRef.current) {
+      socket.emit('screen-share-stopped', {
+        targetSocketId: targetSocketRef.current,
+      })
+    }
+  }, [])
+
   const handleStartScreenShare = useCallback(async () => {
     const socket = getSocket()
     const pc = pcRef.current
@@ -430,27 +451,6 @@ export default function ChatRoom() {
       if (err.message !== 'Screen sharing was cancelled') {
         console.error('Screen share error:', err.message)
       }
-    }
-  }, [handleStopScreenShare])
-
-  const handleStopScreenShare = useCallback(() => {
-    const pc = pcRef.current
-    const socket = getSocket()
-
-    const localStream = useCallStore.getState().localStream
-    const cameraTrack = localStream?.getVideoTracks()[0]
-
-    if (pc && cameraTrack) {
-      renegotiateVideoTrack(pc, cameraTrack, localStream).then(() => {})
-    }
-
-    stopScreenStream(useCallStore.getState().screenStream)
-    useCallStore.getState().stopScreenShare()
-
-    if (socket && targetSocketRef.current) {
-      socket.emit('screen-share-stopped', {
-        targetSocketId: targetSocketRef.current,
-      })
     }
   }, [handleStopScreenShare])
 
