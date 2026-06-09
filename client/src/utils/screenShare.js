@@ -19,12 +19,16 @@ export function stopScreenStream(stream) {
   }
 }
 
-export function replaceVideoTrack(pc, newTrack) {
+export async function replaceVideoTrack(pc, newTrack) {
   if (!pc) return false
   const sender = pc.getSenders().find((s) => s.track?.kind === 'video')
   if (sender) {
-    sender.replaceTrack(newTrack)
-    return true
+    try {
+      await sender.replaceTrack(newTrack)
+      return true
+    } catch {
+      return false
+    }
   }
   return false
 }

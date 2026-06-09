@@ -231,6 +231,27 @@ export default function ChatRoom() {
       pendingCandidates.current = []
     })
 
+    socket.on('renegotiate', async (data) => {
+      const pc = pcRef.current
+      if (pc && data.offer) {
+        await setRemoteDescription(pc, data.offer)
+        const answer = await createAnswer(pc)
+        if (targetSocketRef.current) {
+          socket.emit('renegotiate-answer', {
+            targetSocketId: targetSocketRef.current,
+            answer,
+          })
+        }
+      }
+    })
+
+    socket.on('renegotiate-answer', (data) => {
+      const pc = pcRef.current
+      if (pc && data.answer) {
+        setRemoteDescription(pc, data.answer)
+      }
+    })
+
     socket.on('screen-share-started', (data) => {
       useCallStore.getState().setRemoteScreenSharing(true)
     })
@@ -261,6 +282,8 @@ export default function ChatRoom() {
       socket.off('call-accepted')
       socket.off('ice-candidate')
       socket.off('call-ended')
+      socket.off('renegotiate')
+      socket.off('renegotiate-answer')
       socket.off('screen-share-started')
       socket.off('screen-share-stopped')
       socket.off('connect')
@@ -395,7 +418,7 @@ export default function ChatRoom() {
     }
   }, [callAccepted])
 
-  const handleStopScreenShare = useCallback(() => {
+  const handleStopScreenShare = useCallback(async () => {
     const pc = pcRef.current
     const socket = getSocket()
 
@@ -403,7 +426,13 @@ export default function ChatRoom() {
     const cameraTrack = localStream?.getVideoTracks()[0]
 
     if (pc && cameraTrack) {
-      renegotiateVideoTrack(pc, cameraTrack, localStream).then(() => {})
+      const result = await renegotiateVideoTrack(pc, cameraTrack, localStream)
+      if (typeof result !== 'boolean' && result) {
+        socket?.emit('renegotiate', {
+          targetSocketId: targetSocketRef.current,
+          offer: result,
+        })
+      }
     }
 
     stopScreenStream(useCallStore.getState().screenStream)
@@ -433,10 +462,10 @@ export default function ChatRoom() {
       useCallStore.getState().setScreenStream(screenStream)
       useCallStore.getState().startScreenShare()
 
-      if (result && typeof result !== 'boolean') {
-        socket.emit('ice-candidate', {
+      if (typeof result !== 'boolean') {
+        socket.emit('renegotiate', {
           targetSocketId: targetSocketRef.current,
-          candidate: { sdp: result.sdp, type: result.type },
+          offer: result,
         })
       }
 

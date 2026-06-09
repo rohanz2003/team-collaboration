@@ -36,10 +36,14 @@ export async function getLocalStream(video = true, audio = true) {
 
 export function createPeerConnection(remoteStreamCallback, iceStateCallback) {
   const pc = new RTCPeerConnection(RTC_CONFIG)
+  const remoteStream = new MediaStream()
 
   pc.ontrack = (e) => {
-    if (e.streams?.[0]) {
-      remoteStreamCallback(e.streams[0])
+    if (e.track) {
+      remoteStream.addTrack(e.track)
+    }
+    if (remoteStream.getTracks().length > 0) {
+      remoteStreamCallback(remoteStream)
     }
   }
 
@@ -68,7 +72,8 @@ export async function createAnswer(pc) {
 }
 
 export async function setRemoteDescription(pc, description) {
-  await pc.setRemoteDescription(new RTCSessionDescription(description))
+  const desc = new RTCSessionDescription(description)
+  await pc.setRemoteDescription(desc)
 }
 
 export function addIceCandidate(pc, candidate) {

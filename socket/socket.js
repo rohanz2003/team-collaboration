@@ -370,6 +370,16 @@ function setupSocket(io) {
       io.to(targetSocketId).emit('call-ended');
     });
 
+    socket.on('renegotiate', (data) => {
+      const { targetSocketId, offer } = data;
+      io.to(targetSocketId).emit('renegotiate', { offer });
+    });
+
+    socket.on('renegotiate-answer', (data) => {
+      const { targetSocketId, answer } = data;
+      io.to(targetSocketId).emit('renegotiate-answer', { answer });
+    });
+
     socket.on('screen-share-started', (data) => {
       const { targetSocketId } = data;
       io.to(targetSocketId).emit('screen-share-started', {
