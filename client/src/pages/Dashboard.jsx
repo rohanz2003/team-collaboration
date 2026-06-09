@@ -35,9 +35,10 @@ function StatCard({ label, value, sub, icon }) {
 
 const MemoStat = memo(StatCard)
 
-function WorkspaceRow({ ws, onSelect }) {
+function WorkspaceRow({ ws, onSelect, userId }) {
   const count = ws.members?.length || 0
   const chCount = ws.channels?.length || 0
+  const isOwner = ws.owner?._id === userId
   return (
     <div
       onClick={() => onSelect(ws)}
@@ -68,6 +69,14 @@ function WorkspaceRow({ ws, onSelect }) {
             <span>{count} {count === 1 ? 'member' : 'members'}</span>
             <span style={{ color: '#d0d7de' }}>·</span>
             <span>{chCount} {chCount === 1 ? 'channel' : 'channels'}</span>
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', gap: 3,
+              padding: '1px 6px', borderRadius: 4, fontSize: 11, fontWeight: 600,
+              backgroundColor: isOwner ? '#ddf4ff' : '#f6f8fa',
+              color: isOwner ? '#0969da' : '#656d76',
+            }}>
+              {isOwner ? 'Owner' : 'Member'}
+            </span>
           </div>
         </div>
       </div>
@@ -144,7 +153,7 @@ export default function Dashboard() {
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {workspaces.slice(0, 5).map((ws) => (
-              <MemoWorkspaceRow key={ws._id} ws={ws} onSelect={handleSelect} />
+              <MemoWorkspaceRow key={ws._id} ws={ws} onSelect={handleSelect} userId={user._id} />
             ))}
           </div>
         )}
