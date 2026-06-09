@@ -326,6 +326,7 @@ export default function ChatRoom() {
           targetUserId: targetUser.userId,
           offer,
           callType: withVideo ? 'video' : 'audio',
+          workspaceId: workspace?._id,
         })
 
         setInCall(true)

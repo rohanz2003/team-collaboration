@@ -4,6 +4,7 @@ import { useAuth, useLogout } from '../store/authStore'
 import useWorkspaceStore, { useFetchWorkspaces, useWorkspaces, useWorkspaceLoading } from '../store/workspaceStore'
 import { ROUTES } from '../constants/routes'
 import NotificationBell from '../components/NotificationBell'
+import CallHistory from '../components/CallHistory'
 
 const linkS = {
   display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 14px',
@@ -158,6 +159,10 @@ export default function Dashboard() {
             ))}
           </div>
         )}
+
+        <div style={{ marginTop: 40 }}>
+          <CallHistory userId={user._id} compact />
+        </div>
       </main>
     </div>
   )

@@ -15,6 +15,7 @@ const inviteRoutes = require('./routes/inviteRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const aiRoutes = require('./routes/aiRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const callRoutes = require('./routes/callRoutes');
 const { setupSocket } = require('./socket/socket');
 const { errorHandler, notFound } = require('./middleware/errorHandler');
 const { apiLimiter, authLimiter, messageLimiter } = require('./middleware/rateLimitMiddleware');
@@ -52,7 +53,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Rewrite requests missing /api prefix
 app.use((req, res, next) => {
-  const prefixes = ['/auth', '/workspace', '/channel', '/message', '/upload', '/invite', '/notification', '/ai', '/payment'];
+  const prefixes = ['/auth', '/workspace', '/channel', '/message', '/upload', '/invite', '/notification', '/ai', '/payment', '/call'];
   if (prefixes.some((p) => req.path.startsWith(p)) && !req.path.startsWith('/api')) {
     req.url = '/api' + req.url;
   }
@@ -68,6 +69,7 @@ app.use('/api/invite', apiLimiter, inviteRoutes);
 app.use('/api/notification', apiLimiter, notificationRoutes);
 app.use('/api/ai', apiLimiter, aiRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/call', callRoutes);
 
 if (process.env.NODE_ENV === 'production') {
   const clientBuild = path.join(__dirname, 'client', 'dist');

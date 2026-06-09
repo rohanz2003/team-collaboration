@@ -6,7 +6,9 @@ const { invalidateChannelCache, cacheAIResult } = require('../services/cacheServ
 const { askAI } = require('../services/aiService');
 const logger = require('../services/loggerService');
 
+const CallHistory = require('../models/CallHistory');
 const onlineUsers = new Map();
+const activeCalls = new Map();
 
 function setupSocket(io) {
   io.use(async (socket, next) => {
@@ -314,9 +316,20 @@ function setupSocket(io) {
     });
 
     socket.on('call-user', (data) => {
-      const { targetUserId, offer, callType } = data;
+      const { targetUserId, offer, callType, workspaceId } = data;
       const target = onlineUsers.get(targetUserId);
       if (target) {
+        const key = [socket.id, target.socketId].sort().join(':');
+        activeCalls.set(key, {
+          callerId: user._id.toString(),
+          callerName: user.name,
+          targetUserId,
+          targetUserName: target.name,
+          callType,
+          workspaceId,
+          startedAt: new Date(),
+        });
+
         io.to(target.socketId).emit('incoming-call', {
           from: { userId: user._id.toString(), name: user.name },
           fromSocketId: socket.id,
@@ -338,6 +351,22 @@ function setupSocket(io) {
 
     socket.on('end-call', (data) => {
       const { targetSocketId } = data;
+      const key = [socket.id, targetSocketId].sort().join(':');
+      const callInfo = activeCalls.get(key);
+      if (callInfo) {
+        const endedAt = new Date();
+        const duration = Math.round((endedAt - callInfo.startedAt) / 1000);
+        CallHistory.create({
+          caller: callInfo.callerId,
+          receiver: callInfo.targetUserId,
+          workspace: callInfo.workspaceId,
+          callType: callInfo.callType,
+          duration,
+          startedAt: callInfo.startedAt,
+          endedAt,
+        }).catch((err) => logger.error('Failed to save call history:', err.message));
+        activeCalls.delete(key);
+      }
       io.to(targetSocketId).emit('call-ended');
     });
 
@@ -393,6 +422,23 @@ function setupSocket(io) {
       onlineUsers.delete(user._id.toString());
       io.emit('online-users', Array.from(onlineUsers.values()));
       socket.broadcast.emit('call-ended');
+
+      for (const [key, callInfo] of activeCalls) {
+        if (callInfo.callerId === user._id.toString() || callInfo.targetUserId === user._id.toString()) {
+          const endedAt = new Date();
+          const duration = Math.round((endedAt - callInfo.startedAt) / 1000);
+          CallHistory.create({
+            caller: callInfo.callerId,
+            receiver: callInfo.targetUserId,
+            workspace: callInfo.workspaceId,
+            callType: callInfo.callType,
+            duration,
+            startedAt: callInfo.startedAt,
+            endedAt,
+          }).catch((err) => logger.error('Failed to save call history on disconnect:', err.message));
+          activeCalls.delete(key);
+        }
+      }
     });
   });
 }

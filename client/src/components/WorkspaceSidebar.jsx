@@ -32,7 +32,7 @@ const navBtn = {
   padding: '8px 12px', marginBottom: 2, borderRadius: 0,
 }
 
-export default function WorkspaceSidebar() {
+export default function WorkspaceSidebar({ onToggleCallHistory }) {
   const workspace = useCurrentWorkspace()
   const channels = useChannels()
   const currentChannel = useCurrentChannel()
@@ -272,6 +272,17 @@ export default function WorkspaceSidebar() {
             <path d="M7.78 12.53a.75.75 0 0 1-1.06 0L2.22 8.03a.75.75 0 0 1 0-1.06l4.5-4.5a.75.75 0 0 1 1.06 1.06L4.56 7h8.69a.75.75 0 0 1 0 1.5H4.56l3.22 3.22a.75.75 0 0 1 0 1.06Z"/>
           </svg>
           Workspaces
+        </button>
+        <button
+          onClick={onToggleCallHistory}
+          style={navBtn}
+          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#e9edef' }}
+          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}
+        >
+          <svg width="16" height="16" viewBox="0 0 640 512" fill="#667781">
+            <path d="M392.9 64H103.1C77.7 64 57 84.7 57 110.1V401.9c0 25.4 20.7 46.1 46.1 46.1h289.8c25.4 0 46.1-20.7 46.1-46.1V110.1c0-25.4-20.7-46.1-46.1-46.1zm54.1 227.5l88.9 81.7c6.1 5.6 15.1 5.7 21.3.4l56.8-48.2c7.6-6.4 7.6-18.1 0-24.5L523 291.5l68.2-67.4c7.6-6.4 7.6-18.1 0-24.5l-56.8-48.2c-6.2-5.2-15.2-5.1-21.3.4l-88.9 81.7-4.9-3.2V155.2l119.9-110.2c9.9-9.1 9.9-24.2 0-33.3L564.9 1.9c-8.4-7.7-21.1-7.7-29.5 0L387.8 111.6H133.5L68.2 1.9c-8.4-7.7-21.1-7.7-29.5 0L4.9 11.7c-9.9 9.1-9.9 24.2 0 33.3L124.8 155.2v201.5L4.9 466.9c-9.9 9.1-9.9 24.2 0 33.3l33.9 31.1c8.4 7.7 21.1 7.7 29.5 0l195.1-178.9h.4l.4-.3 195.1 179.2c8.4 7.7 21.1 7.7 29.5 0l33.9-31.1c9.9-9.1 9.9-24.2 0-33.3L447 356.7v-48.5l-4.9 3.2z"/>
+          </svg>
+          Call History
         </button>
         {userRole === 'owner' && (
           <button
